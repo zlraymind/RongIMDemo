@@ -12,9 +12,7 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_centerInParent="true"
         android:layout_marginBottom="40dp"
         android:paddingLeft="50dp"
         android:paddingRight="50dp">
@@ -24,6 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
             android:text="融云Demo 注册界面"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
 
@@ -47,6 +46,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
+                android:maxLength="12"
                 android:singleLine="true"/>
         </LinearLayout>
 
@@ -69,6 +69,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
+                android:maxLength="12"
+                android:password="true"
                 android:singleLine="true"/>
         </LinearLayout>
 
@@ -76,8 +78,7 @@
             android:id="@+id/layout_nickname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/layout_password"
-            android:layout_marginTop="20dp">
+            android:layout_below="@+id/layout_password">
 
             <TextView
                 android:layout_width="0dp"
@@ -92,6 +93,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
+                android:maxLength="12"
                 android:singleLine="true"/>
         </LinearLayout>
 
@@ -117,7 +119,7 @@
                 android:layout_marginLeft="20dp"
                 android:scaleType="centerCrop"
                 android:singleLine="true"
-                android:src="@mipmap/et"/>
+                android:src="@mipmap/take_pic"/>
         </LinearLayout>
 
         <LinearLayout
@@ -125,7 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_portrait"
             android:layout_centerInParent="true"
-            android:layout_marginTop="30dp">
+            android:layout_marginTop="50dp">
 
             <Button
                 android:id="@+id/signup"

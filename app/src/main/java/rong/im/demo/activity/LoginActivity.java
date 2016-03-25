@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import cn.bmob.v3.Bmob;
 import rong.im.demo.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -23,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Bmob.initialize(this, "0d7dbcd610ef903a5e756753060812b9");
         initView();
     }
 
@@ -35,15 +37,13 @@ public class LoginActivity extends AppCompatActivity {
         txtUsername = (TextView) findViewById(R.id.username);
         txtPassword = (TextView) findViewById(R.id.password);
 
-        Button btnLogin = (Button) findViewById(R.id.login);
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             }
         });
 
-        Button btnExit = (Button) findViewById(R.id.exit);
-        btnExit.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
