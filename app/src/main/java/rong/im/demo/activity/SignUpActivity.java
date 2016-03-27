@@ -1,13 +1,11 @@
 package rong.im.demo.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -45,6 +43,9 @@ public class SignUpActivity extends AppCompatActivity implements Handler.Callbac
     private static final int STATE_ADD_USER_SUCCESS = 1;
     private static final int STATE_UPLOAD_PORTRAIT_FAILED = 2;
     private static final int STATE_UPLOAD_PORTRAIT_SUCCESS = 3;
+    private static final int STATE_SIGN_UP_FAILED = 4;
+    private static final int STATE_SIGN_UP_SUCCESS = 5;
+
 
     private TextView txtUsername;
     private TextView txtPassword;
@@ -65,16 +66,18 @@ public class SignUpActivity extends AppCompatActivity implements Handler.Callbac
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
             case STATE_ADD_USER_FAILED:
+            case STATE_UPLOAD_PORTRAIT_FAILED:
+            case STATE_SIGN_UP_FAILED:
                 Toast.makeText(this, (String) msg.obj, Toast.LENGTH_SHORT).show();
                 break;
             case STATE_ADD_USER_SUCCESS:
                 uploadPortrait();
                 break;
-            case STATE_UPLOAD_PORTRAIT_FAILED:
-                Toast.makeText(this, (String) msg.obj, Toast.LENGTH_SHORT).show();
-                break;
             case STATE_UPLOAD_PORTRAIT_SUCCESS:
                 updatePortraitToServer((String) msg.obj);
+                break;
+            case STATE_SIGN_UP_SUCCESS:
+                Toast.makeText(SignUpActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
                 break;
             default:
         }
@@ -160,12 +163,10 @@ public class SignUpActivity extends AppCompatActivity implements Handler.Callbac
                     JSONObject result = new JSONObject(object.toString());
                     code = result.getInt("code");
                 } catch (JSONException e) {
-                    e.printStackTrace();
                 }
 
                 Message msg = Message.obtain();
                 if (code == 0) {
-                    Toast.makeText(SignUpActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
                     msg.what = STATE_ADD_USER_SUCCESS;
                     handler.sendMessage(msg);
                 } else {
@@ -224,29 +225,26 @@ public class SignUpActivity extends AppCompatActivity implements Handler.Callbac
                 Log.d(TAG, "callEndpoint->updatePortrait: response = " + object.toString());
 
                 // parser result
-//                int code = 0;
-//                try {
-//                    JSONObject result = new JSONObject(object.toString());
-//                    code = result.getInt("code");
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                Message msg = Message.obtain();
-//                if (code == 0) {
-//                    Toast.makeText(SignUpActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
-//                    msg.what = STATE_ADD_USER_SUCCESS;
-//                    handler.sendMessage(msg);
-//                } else {
-//                    msg.what = STATE_ADD_USER_FAILED;
-//                    switch (code) {
-//                        case 202:
-//                            msg.obj = "错误! 用户名已存在.";
-//                            break;
-//                        default:
-//                    }
-//                    handler.sendMessage(msg);
-//                }
+                int code = 0;
+                try {
+                    JSONObject result = new JSONObject(object.toString());
+                    code = result.getInt("code");
+                } catch (JSONException e) {
+                }
+                Message msg = Message.obtain();
+                if (code == 0) {
+                    msg.what = STATE_SIGN_UP_SUCCESS;
+                    handler.sendMessage(msg);
+                } else {
+                    msg.what = STATE_SIGN_UP_FAILED;
+                    switch (code) {
+                        case 201:
+                            msg.obj = "错误! 密码错误.";
+                            break;
+                        default:
+                    }
+                    handler.sendMessage(msg);
+                }
             }
 
             @Override
