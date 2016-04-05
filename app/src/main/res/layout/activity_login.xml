@@ -6,93 +6,40 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"/>
+        android:layout_height="48dp"
+        android:background="#393a3e"/>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:padding="50dp">
+    <include
+        android:id="@+id/layout_username"
+        layout="@layout/login_editbox"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"/>
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="融云Demo 登录界面"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+    <include
+        android:id="@+id/layout_password"
+        layout="@layout/login_editbox"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignLeft="@id/layout_username"
+        android:layout_alignRight="@id/layout_username"
+        android:layout_below="@id/layout_username"/>
 
-        <LinearLayout
-            android:id="@+id/layout_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
-            android:layout_marginTop="50dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:width="0dp"
-                android:gravity="center"
-                android:text="用户名:"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-            <EditText
-                android:id="@+id/username"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:singleLine="true"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/layout_username">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:width="0dp"
-                android:gravity="center"
-                android:text="密码:"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-            <EditText
-                android:id="@+id/password"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:singleLine="true"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/layout_password"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="50dp">
-
-            <Button
-                android:id="@+id/login"
-                android:layout_width="100dp"
-                android:layout_height="62dp"
-                android:text="登录"
-                android:textAllCaps="false"/>
-
-            <Button
-                android:id="@+id/exit"
-                android:layout_width="100dp"
-                android:layout_height="62dp"
-                android:layout_marginLeft="30dp"
-                android:text="退出"
-                android:textAllCaps="false"/>
-        </LinearLayout>
-    </RelativeLayout>
+    <Button
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignLeft="@id/layout_username"
+        android:layout_alignRight="@id/layout_username"
+        android:layout_below="@+id/layout_password"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/login_button"
+        android:enabled="false"
+        android:text="登录"
+        android:textColor="@drawable/login_button_text"
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/sign_up"
@@ -102,5 +49,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:text="注册"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textColor="#5d709a"
+        android:textSize="16sp"/>
 </RelativeLayout>

@@ -12,13 +12,15 @@ import android.widget.TextView;
 
 import cn.bmob.v3.Bmob;
 import rong.im.demo.R;
+import rong.im.demo.widget.LoginEditBox;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
 
-    private TextView txtUsername;
-    private TextView txtPassword;
+    private LoginEditBox username;
+    private LoginEditBox password;
+    private TextView signup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,30 +36,38 @@ public class LoginActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
-        txtUsername = (TextView) findViewById(R.id.username);
-        txtPassword = (TextView) findViewById(R.id.password);
-
-        findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-
-        findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        TextView txtSignUp = (TextView) findViewById(R.id.sign_up);
-        txtSignUp.setPaintFlags(txtSignUp.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        txtSignUp.setOnClickListener(new View.OnClickListener() {
+        username = new LoginEditBox(findViewById(R.id.layout_username), "用户名", "你的登录名");
+        password = new LoginEditBox(findViewById(R.id.layout_password), "密码", "填写密码");
+        signup = (TextView) findViewById(R.id.sign_up);
+        signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent);
             }
         });
+
+//        findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//            }
+//        });
+//
+//        findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
+//
+//        TextView txtSignUp = (TextView) findViewById(R.id.sign_up);
+//        txtSignUp.setPaintFlags(txtSignUp.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+//        txtSignUp.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+//                startActivity(intent);
+//            }
+//        });
     }
 }
