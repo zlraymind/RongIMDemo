@@ -49,6 +49,7 @@
         android:layout_below="@id/layout_username"/>
 
     <Button
+        android:id="@+id/sign_up"
         style="?android:attr/borderlessButtonStyle"
         android:enabled="false"
         android:layout_width="match_parent"

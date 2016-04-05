@@ -1,39 +1,23 @@
 package rong.im.demo.activity;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import cn.bmob.v3.AsyncCustomEndpoints;
-import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.listener.CloudCodeListener;
-import cn.bmob.v3.listener.UploadFileListener;
 import rong.im.demo.R;
+import rong.im.demo.widget.LoginDialog;
 import rong.im.demo.widget.LoginEditBox;
 
-public class SignUpActivity extends AppCompatActivity implements Handler.Callback {
+public class SignUpActivity extends AppCompatActivity implements TextWatcher, Handler.Callback {
 
     private static final String TAG = "SignUpActivity";
 
@@ -51,6 +35,7 @@ public class SignUpActivity extends AppCompatActivity implements Handler.Callbac
     private LoginEditBox nickname;
     private LoginEditBox username;
     private LoginEditBox password;
+    private Button signUp;
     private ImageView imgPortrait;
 
     private Uri takePhotoUri;
@@ -89,13 +74,29 @@ public class SignUpActivity extends AppCompatActivity implements Handler.Callbac
 
     private void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("RongIM Demo");
+        toolbar.setTitle("融云演示");
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
         nickname = new LoginEditBox(findViewById(R.id.layout_nickname), "昵称", "例如:张无忌");
         username = new LoginEditBox(findViewById(R.id.layout_username), "用户名", "你的登录名");
         password = new LoginEditBox(findViewById(R.id.layout_password), "密码", "填写密码");
+        signUp = (Button) findViewById(R.id.sign_up);
+
+        nickname.setTextChangedListener(this);
+        username.setTextChangedListener(this);
+        password.setTextChangedListener(this);
+        signUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (password.getText().length() < 6) {
+                    LoginDialog dialog = new LoginDialog(SignUpActivity.this);
+                    dialog.setTitle("格式错误");
+                    dialog.setBody("您输入的密码长度需大于6位");
+                    dialog.show(SignUpActivity.this);
+                }
+            }
+        });
 
 
 //        imgPortrait = (ImageView) findViewById(R.id.portrait);
@@ -130,6 +131,20 @@ public class SignUpActivity extends AppCompatActivity implements Handler.Callbac
 //                finish();
 //            }
 //        });
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        boolean notEmpty = !nickname.getText().isEmpty() && !username.getText().isEmpty() && !password.getText().isEmpty();
+        signUp.setEnabled(notEmpty);
     }
 
 //    private String checkInfoValid() {
