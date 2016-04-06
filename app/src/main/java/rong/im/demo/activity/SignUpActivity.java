@@ -1,5 +1,6 @@
 package rong.im.demo.activity;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,12 +11,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import rong.im.demo.R;
-import rong.im.demo.widget.LoginDialog;
 import rong.im.demo.widget.LoginEditBox;
+import rong.im.demo.widget.WarringDialog;
 
 public class SignUpActivity extends AppCompatActivity implements TextWatcher, Handler.Callback {
 
@@ -89,11 +91,12 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideInputPanel();
                 if (password.getText().length() < 6) {
-                    LoginDialog dialog = new LoginDialog(SignUpActivity.this);
-                    dialog.setTitle("格式错误");
+                    WarringDialog dialog = new WarringDialog(SignUpActivity.this);
+                    dialog.setSubject("格式错误");
                     dialog.setBody("您输入的密码长度需大于6位");
-                    dialog.show(SignUpActivity.this);
+                    dialog.show();
                 }
             }
         });
@@ -133,6 +136,14 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
 //        });
     }
 
+    private void hideInputPanel() {
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
     }
@@ -147,19 +158,6 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
         signUp.setEnabled(notEmpty);
     }
 
-//    private String checkInfoValid() {
-//        if (txtUsername.length() == 0) {
-//            return "错误! 用户名不能为空.";
-//        }
-//        if (txtPassword.length() < 6) {
-//            return "错误! 密码不能少于6位.";
-//        }
-//        if (imgPortrait.getTag() == null) {
-//            return "错误! 头像不能为空.";
-//        }
-//        return "OK";
-//    }
-//
 //    private void addUserToServer() {
 //        JSONObject jsonObj = new JSONObject();
 //        try {

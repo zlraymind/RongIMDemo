@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="WarringDialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@drawable/login_dialog_background</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
 </resources>
