@@ -9,8 +9,11 @@ import java.io.File;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.LogInListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
 import rong.im.demo.model.LoginUser;
@@ -25,6 +28,7 @@ public class BmobUtil {
         query.findObjects(context, new FindListener<LoginUser>() {
             @Override
             public void onSuccess(List<LoginUser> object) {
+                Log.d(TAG, "checkUserFromServer onSuccess");
                 handler.sendEmptyMessage(Const.REQUEST_SUCCESS);
             }
 
@@ -44,6 +48,7 @@ public class BmobUtil {
         bmobFile.uploadblock(context, new UploadFileListener() {
             @Override
             public void onSuccess() {
+                Log.d(TAG, "uploadPortraitToServer onSuccess");
                 Message message = Message.obtain();
                 message.what = Const.REQUEST_SUCCESS;
                 message.obj = bmobFile.getFileUrl(context);
@@ -65,11 +70,32 @@ public class BmobUtil {
         user.signUp(context, new SaveListener() {
             @Override
             public void onSuccess() {
+                Log.d(TAG, "addUserToServer onSuccess");
+                handler.sendEmptyMessage(Const.REQUEST_SUCCESS);
             }
 
             @Override
             public void onFailure(int code, String msg) {
                 Log.e(TAG, "addUserToServer onFailure code = " + code + "; msg = " + msg);
+                Message message = Message.obtain();
+                message.what = Const.REQUEST_FAILED;
+                message.obj = msg;
+                handler.sendMessage(message);
+            }
+        });
+    }
+
+    public static void loginToServer(LoginUser user, final Context context, final Handler handler) {
+        user.login(context, new SaveListener() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "loginToServer onSuccess");
+                handler.sendEmptyMessage(Const.REQUEST_SUCCESS);
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+                Log.e(TAG, "loginToServer onFailure code = " + code + "; msg = " + msg);
                 Message message = Message.obtain();
                 message.what = Const.REQUEST_FAILED;
                 message.obj = msg;

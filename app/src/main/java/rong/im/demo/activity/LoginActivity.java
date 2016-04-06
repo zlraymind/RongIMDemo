@@ -3,18 +3,25 @@ package rong.im.demo.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import rong.im.demo.R;
+import rong.im.demo.model.LoginUser;
+import rong.im.demo.util.BmobUtil;
+import rong.im.demo.util.Const;
 import rong.im.demo.widget.LoginEditBox;
 
-public class LoginActivity extends AppCompatActivity implements TextWatcher {
+public class LoginActivity extends AppCompatActivity  implements TextWatcher, Handler.Callback {
 
     private static final String TAG = "LoginActivity";
 
@@ -22,6 +29,8 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
     private LoginEditBox password;
     private Button login;
     private TextView signup;
+
+    private Handler handler = new Handler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +52,12 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
 
         username.setTextChangedListener(this);
         password.setTextChangedListener(this);
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BmobUtil.loginToServer(getLoginUser(), LoginActivity.this, handler);
+            }
+        });
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,6 +65,24 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
                 startActivity(intent);
             }
         });
+    }
+
+    private LoginUser getLoginUser() {
+        LoginUser user = new LoginUser();
+        user.setUsername(username.getText());
+        user.setPassword(password.getText());
+        return user;
+    }
+
+    @Override
+    public boolean handleMessage(Message msg) {
+        Log.d(TAG, "handleMessage msg.what = " + msg.what);
+        if (msg.what == Const.REQUEST_SUCCESS) {
+
+        } else {
+            Toast.makeText(LoginActivity.this, (String) msg.obj, Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 
     @Override

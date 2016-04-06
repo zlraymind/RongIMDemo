@@ -14,7 +14,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         if (getApplicationInfo().packageName.equals(getCurProcessName(getApplicationContext()))) {
-            Bmob.initialize(this, "0d7dbcd610ef903a5e756753060812b9");
+            Bmob.initialize(this, "dbfbf316ee8f47dadf0520cb64c6061d");
         }
         if (getApplicationInfo().packageName.equals(getCurProcessName(getApplicationContext())) ||
                 "io.rong.push".equals(getCurProcessName(getApplicationContext()))) {
