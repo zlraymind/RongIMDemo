@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -52,6 +53,7 @@ public class LoginActivity extends AppCompatActivity  implements TextWatcher, Ha
 
         username.setTextChangedListener(this);
         password.setTextChangedListener(this);
+        password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
