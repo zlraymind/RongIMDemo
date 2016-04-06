@@ -10,12 +10,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import rong.im.demo.R;
+import rong.im.demo.util.BmobUtil;
+import rong.im.demo.util.Const;
 import rong.im.demo.widget.LoginEditBox;
 import rong.im.demo.widget.WarringDialog;
 
@@ -26,22 +30,23 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
     private static final int REQUEST_CAMERA = 0;
     private static final int REQUEST_CROP = 1;
 
-    private static final int STATE_ADD_USER_FAILED = 0;
-    private static final int STATE_ADD_USER_SUCCESS = 1;
-    private static final int STATE_UPLOAD_PORTRAIT_FAILED = 2;
-    private static final int STATE_UPLOAD_PORTRAIT_SUCCESS = 3;
-    private static final int STATE_SIGN_UP_FAILED = 4;
-    private static final int STATE_SIGN_UP_SUCCESS = 5;
-
+    private static final int STATE_CHECK_USERNAME = 1;
+//    private static final int STATE_ADD_USER_SUCCESS = 1;
+//    private static final int STATE_UPLOAD_PORTRAIT_FAILED = 2;
+//    private static final int STATE_UPLOAD_PORTRAIT_SUCCESS = 3;
+//    private static final int STATE_SIGN_UP_FAILED = 4;
+//    private static final int STATE_SIGN_UP_SUCCESS = 5;
 
     private LoginEditBox nickname;
     private LoginEditBox username;
     private LoginEditBox password;
     private Button signUp;
-    private ImageView imgPortrait;
 
-    private Uri takePhotoUri;
+    private int state;
     private Handler handler = new Handler(this);
+
+//    private ImageView imgPortrait;
+//    private Uri takePhotoUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,25 +57,16 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
 
     @Override
     public boolean handleMessage(Message msg) {
-//        switch (msg.what) {
-//            case STATE_ADD_USER_FAILED:
-//            case STATE_UPLOAD_PORTRAIT_FAILED:
-//            case STATE_SIGN_UP_FAILED:
-//                Toast.makeText(this, (String) msg.obj, Toast.LENGTH_SHORT).show();
-//                break;
-//            case STATE_ADD_USER_SUCCESS:
-//                uploadPortrait();
-//                break;
-//            case STATE_UPLOAD_PORTRAIT_SUCCESS:
-//                updatePortraitToServer((String) msg.obj);
-//                break;
-//            case STATE_SIGN_UP_SUCCESS:
-//                Log.d(TAG, "objectId = " + msg.obj);
-//
-//                Toast.makeText(SignUpActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
-//                break;
-//            default:
-//        }
+        switch (state) {
+            case STATE_CHECK_USERNAME:
+                if (msg.what == Const.REQUEST_SUCCESS) {
+
+                } else {
+                    Toast.makeText(SignUpActivity.this, (String) msg.obj, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+        }
         return true;
     }
 
@@ -97,7 +93,11 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
                     dialog.setSubject("格式错误");
                     dialog.setBody("您输入的密码长度需大于6位");
                     dialog.show();
+                    return;
                 }
+
+                state = STATE_CHECK_USERNAME;
+                BmobUtil.checkUserFromServer(username.getText(), SignUpActivity.this, handler);
             }
         });
 

@@ -5,69 +5,76 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.io.File;
+import java.util.List;
 
-import cn.bmob.v3.AsyncCustomEndpoints;
-import cn.bmob.v3.listener.CloudCodeListener;
-import rong.im.demo.model.UserInfo;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
+import rong.im.demo.model.LoginUser;
 
 public class BmobUtil {
 
     private static final String TAG = "BmobUtil";
 
-    public static void addUserToServer(UserInfo info, String password, Context context, final Handler handler) {
-        JSONObject jsonObj = new JSONObject();
-        try {
-            jsonObj.put("username", info.username);
-            jsonObj.put("password", password);
-            jsonObj.put("nickname", info.nickname);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        AsyncCustomEndpoints ace = new AsyncCustomEndpoints();
-        ace.callEndpoint(context, "addUser", jsonObj, new CloudCodeListener() {
+    public static void checkUserFromServer(String username, final Context context, final Handler handler) {
+        BmobQuery<LoginUser> query = new BmobQuery<>();
+        query.addWhereEqualTo("username", username);
+        query.findObjects(context, new FindListener<LoginUser>() {
             @Override
-            public void onSuccess(Object object) {
-                Log.d(TAG, "callEndpoint->addUserToServer: response = " + object.toString());
-
-                // parser result
-                Message msg = Message.obtain();
-                String objectId = null;
-                try {
-                    JSONObject result = new JSONObject(object.toString());
-                    objectId = result.getString("objectId");
-                    msg.obj = objectId;
-                    msg.what = Const.REQUEST_SUCCESS;
-                    handler.sendMessage(msg);
-                } catch (JSONException e) {
-                    try {
-                        JSONObject result = new JSONObject(object.toString());
-                        int code = result.getInt("code");
-                        msg.what = Const.REQUEST_FAILED;
-                        msg.arg1 = code;
-                        handler.sendMessage(msg);
-                    } catch (JSONException exp) {
-                    }
-                }
+            public void onSuccess(List<LoginUser> object) {
+                handler.sendEmptyMessage(Const.REQUEST_SUCCESS);
             }
 
             @Override
-            public void onFailure(int code, String message) {
-                Message msg = Message.obtain();
-                msg.what = Const.REQUEST_FAILED;
-                msg.arg1 = code;
-                handler.sendMessage(msg);
+            public void onError(int code, String msg) {
+                Log.e(TAG, "checkUserFromServer onFailure code = " + code + "; msg = " + msg);
+                Message message = Message.obtain();
+                message.what = Const.REQUEST_FAILED;
+                message.obj = msg;
+                handler.sendMessage(message);
             }
         });
     }
 
-    public static void uploadPortraitToServer(String path) {
+    public static void uploadPortraitToServer(String picPath, final Context context, final Handler handler) {
+        final BmobFile bmobFile = new BmobFile(new File(picPath));
+        bmobFile.uploadblock(context, new UploadFileListener() {
+            @Override
+            public void onSuccess() {
+                Message message = Message.obtain();
+                message.what = Const.REQUEST_SUCCESS;
+                message.obj = bmobFile.getFileUrl(context);
+                handler.sendMessage(message);
+            }
 
+            @Override
+            public void onFailure(int code, String msg) {
+                Log.e(TAG, "uploadPortraitToServer onFailure code = " + code + "; msg = " + msg);
+                Message message = Message.obtain();
+                message.what = Const.REQUEST_FAILED;
+                message.obj = msg;
+                handler.sendMessage(message);
+            }
+        });
     }
 
-    public static void updatePortraitToServer() {
+    public static void addUserToServer(LoginUser user, final Context context, final Handler handler) {
+        user.signUp(context, new SaveListener() {
+            @Override
+            public void onSuccess() {
+            }
 
+            @Override
+            public void onFailure(int code, String msg) {
+                Log.e(TAG, "addUserToServer onFailure code = " + code + "; msg = " + msg);
+                Message message = Message.obtain();
+                message.what = Const.REQUEST_FAILED;
+                message.obj = msg;
+                handler.sendMessage(message);
+            }
+        });
     }
 }
