@@ -1,12 +1,10 @@
 package rong.im.demo.activity;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -36,6 +34,7 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
     private LoginEditBox nickname;
     private LoginEditBox username;
     private LoginEditBox password;
+    private ImageView back;
     private ImageView portrait;
     private Button signUp;
 
@@ -50,22 +49,10 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
     }
 
     private void initView() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("融云演示");
-        toolbar.setTitleTextColor(Color.WHITE);
-        setSupportActionBar(toolbar);
-
-//        toolbar.setNavigationIcon(R.drawable.toolbar_back);
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "onClick");
-//            }
-//        });
-
         nickname = new LoginEditBox(findViewById(R.id.layout_nickname), "昵称", "例如:张无忌");
         username = new LoginEditBox(findViewById(R.id.layout_username), "用户名", "您的用户名");
         password = new LoginEditBox(findViewById(R.id.layout_password), "密码", "填写密码");
+        back = (ImageView) findViewById(R.id.back);
         portrait = (ImageView) findViewById(R.id.portrait);
         signUp = (Button) findViewById(R.id.sign_up);
 
@@ -73,6 +60,12 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
         username.setTextChangedListener(this);
         password.setTextChangedListener(this);
         password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

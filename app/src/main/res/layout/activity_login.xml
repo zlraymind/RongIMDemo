@@ -3,18 +3,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
+    <LinearLayout
+        android:orientation="horizontal"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="#393a3e"/>
+        android:background="#393a3e">
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="融云演示"
+            android:layout_marginLeft="16dp"
+            android:textColor="#ffffff"
+            android:textSize="18sp"/>
+    </LinearLayout>
 
     <include
         android:id="@+id/layout_username"
         layout="@layout/login_editbox"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@id/toolbar"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"/>
 

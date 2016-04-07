@@ -1,12 +1,10 @@
 package rong.im.demo.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -22,7 +20,7 @@ import rong.im.demo.util.BmobUtil;
 import rong.im.demo.util.Const;
 import rong.im.demo.widget.LoginEditBox;
 
-public class LoginActivity extends AppCompatActivity  implements TextWatcher, Handler.Callback {
+public class LoginActivity extends AppCompatActivity implements TextWatcher, Handler.Callback {
 
     private static final String TAG = "LoginActivity";
 
@@ -41,11 +39,6 @@ public class LoginActivity extends AppCompatActivity  implements TextWatcher, Ha
     }
 
     private void initView() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("融云演示");
-        toolbar.setTitleTextColor(Color.WHITE);
-        setSupportActionBar(toolbar);
-
         username = new LoginEditBox(findViewById(R.id.layout_username), "用户名", "你的登录名");
         password = new LoginEditBox(findViewById(R.id.layout_password), "密码", "填写密码");
         login = (Button) findViewById(R.id.login);
