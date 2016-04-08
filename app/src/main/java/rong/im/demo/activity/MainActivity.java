@@ -16,10 +16,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        nor = (ImageView) findViewById(R.id.titlebar_im_nor);
-        sel = (ImageView) findViewById(R.id.titlebar_im_sel);
-
-        nor.setAlpha(0.1f);
-        sel.setAlpha(0.9f);
+//        nor = (ImageView) findViewById(R.id.titlebar_im_nor);
+//        sel = (ImageView) findViewById(R.id.titlebar_im_sel);
+//
+//        nor.setAlpha(0.1f);
+//        sel.setAlpha(0.9f);
     }
 }

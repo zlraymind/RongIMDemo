@@ -12,20 +12,21 @@ public class LoginEditBox {
 
     private View rootView;
     private EditText content;
-    private ImageView underline;
+    private View underline;
 
     public LoginEditBox(View root, String subject, String hint) {
         rootView = root;
         TextView title = (TextView) rootView.findViewById(R.id.title);
         content = (EditText) rootView.findViewById(R.id.content);
-        underline = (ImageView) rootView.findViewById(R.id.underline);
+        underline = rootView.findViewById(R.id.underline);
 
         title.setText(subject);
         content.setHint(hint);
         content.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                underline.setImageResource(hasFocus ? R.drawable.login_underline_enable : R.drawable.login_underline_disable);
+                underline.setBackgroundResource(hasFocus ? R.color.login_editbox_underline_enable
+                        : R.color.login_editbox_underline_disable);
             }
         });
     }
