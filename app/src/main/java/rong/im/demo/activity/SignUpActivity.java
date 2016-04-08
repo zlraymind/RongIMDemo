@@ -25,7 +25,6 @@ import rong.im.demo.widget.WarringDialog;
 public class SignUpActivity extends AppCompatActivity implements TextWatcher, Handler.Callback {
 
     private static final String TAG = "SignUpActivity";
-
     private static final int STATE_CHECK_USERNAME = 1;
     private static final int STATE_UPLOAD_PORTRAIT = 2;
     private static final int STATE_SIGN_UP = 3;
