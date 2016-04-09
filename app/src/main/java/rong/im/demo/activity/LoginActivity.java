@@ -15,20 +15,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import rong.im.demo.R;
-import rong.im.demo.model.LoginUser;
+import rong.im.demo.model.User;
 import rong.im.demo.util.BmobUtil;
 import rong.im.demo.util.Const;
+import rong.im.demo.util.RongUtil;
 import rong.im.demo.widget.LoginEditBox;
 
 public class LoginActivity extends AppCompatActivity implements TextWatcher, Handler.Callback {
 
     private static final String TAG = "LoginActivity";
 
+    private static final int STATE_LOGIN = 1;
+    private static final int STATE_REQUEST_TOKEN = 2;
+    private static final int STATE_CONNECT_IM_SERVER = 3;
+
     private LoginEditBox username;
     private LoginEditBox password;
     private Button login;
     private TextView signup;
 
+    private int state;
     private Handler handler = new Handler(this);
 
     @Override
@@ -50,7 +56,8 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BmobUtil.loginToServer(getLoginUser(), LoginActivity.this, handler);
+                state = STATE_LOGIN;
+                BmobUtil.loginToServer(getUser(), LoginActivity.this, handler);
             }
         });
         signup.setOnClickListener(new View.OnClickListener() {
@@ -62,20 +69,36 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
         });
     }
 
-    private LoginUser getLoginUser() {
-        LoginUser user = new LoginUser();
-        user.setUsername(username.getText());
-        user.setPassword(password.getText());
+    private User getUser() {
+        User user = new User();
+        user.username = username.getText();
+        user.password = password.getText();
         return user;
     }
 
     @Override
     public boolean handleMessage(Message msg) {
-        Log.d(TAG, "handleMessage msg.what = " + msg.what);
-        if (msg.what == Const.REQUEST_SUCCESS) {
-
-        } else {
+        Log.d(TAG, "handleMessage state = " + state + "; msg.what = " + msg.what);
+        if (msg.what == Const.REQUEST_FAILED) {
             Toast.makeText(LoginActivity.this, (String) msg.obj, Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        switch (state++) {
+            case STATE_LOGIN:
+                BmobUtil.requestToken(getUser(), this, handler);
+                break;
+            case STATE_REQUEST_TOKEN:
+                String token = (String) msg.obj;
+                RongUtil.connectIMServer(token, handler);
+                break;
+            case STATE_CONNECT_IM_SERVER:
+                Intent intent = new Intent();
+                intent.setClass(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+            default:
         }
         return true;
     }

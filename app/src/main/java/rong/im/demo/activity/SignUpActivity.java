@@ -1,6 +1,7 @@
 package rong.im.demo.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,9 +17,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import rong.im.demo.R;
-import rong.im.demo.model.LoginUser;
+import rong.im.demo.model.User;
 import rong.im.demo.util.BmobUtil;
 import rong.im.demo.util.Const;
+import rong.im.demo.util.RongUtil;
 import rong.im.demo.widget.LoginEditBox;
 import rong.im.demo.widget.WarringDialog;
 
@@ -29,6 +31,8 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
     private static final int STATE_UPLOAD_PORTRAIT = 2;
     private static final int STATE_SIGN_UP = 3;
     private static final int STATE_LOGIN = 4;
+    private static final int STATE_REQUEST_TOKEN = 5;
+    private static final int STATE_CONNECT_IM_SERVER = 6;
 
     private LoginEditBox nickname;
     private LoginEditBox username;
@@ -99,15 +103,15 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
         }
     }
 
-    private LoginUser getLoginUser() {
-        LoginUser user = new LoginUser();
-        user.setUsername(username.getText());
-        user.setPassword(password.getText());
-        user.setNickname(nickname.getText());
+    private User getUser() {
+        User user = new User();
+        user.username = username.getText();
+        user.password = password.getText();
+        user.nickname = nickname.getText();
         if (portrait.getTag() == null) {
-            user.setPortrait(Const.DEFAULT_PORTRAIT);
+            user.portrait = Const.DEFAULT_PORTRAIT;
         } else {
-            user.setPortrait((String) portrait.getTag());
+            user.portrait = (String) portrait.getTag();
         }
         return user;
     }
@@ -124,18 +128,29 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
             case STATE_CHECK_USERNAME:
                 if (portrait.getTag() == null) {
                     state = STATE_SIGN_UP;
-                    BmobUtil.addUserToServer(getLoginUser(), this, handler);
+                    BmobUtil.addUserToServer(getUser(), this, handler);
                 } else {
                     BmobUtil.uploadPortraitToServer((String) portrait.getTag(), this, handler);
                 }
                 break;
             case STATE_UPLOAD_PORTRAIT:
-                BmobUtil.addUserToServer(getLoginUser(), this, handler);
+                BmobUtil.addUserToServer(getUser(), this, handler);
                 break;
             case STATE_SIGN_UP:
-                BmobUtil.loginToServer(getLoginUser(), this, handler);
+                BmobUtil.loginToServer(getUser(), this, handler);
                 break;
             case STATE_LOGIN:
+                BmobUtil.requestToken(getUser(), this, handler);
+                break;
+            case STATE_REQUEST_TOKEN:
+                String token = (String) msg.obj;
+                RongUtil.connectIMServer(token, handler);
+                break;
+            case STATE_CONNECT_IM_SERVER:
+                Intent intent = new Intent();
+                intent.setClass(SignUpActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
                 break;
             default:
         }
