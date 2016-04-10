@@ -16,7 +16,7 @@ public class WarringDialog extends Dialog {
 
     public WarringDialog(Context context) {
         super(context, R.style.WarringDialog);
-        setContentView(R.layout.login_dialog);
+        setContentView(R.layout.dialog_warring);
 
         title = (TextView) findViewById(R.id.title);
         body = (TextView) findViewById(R.id.body);

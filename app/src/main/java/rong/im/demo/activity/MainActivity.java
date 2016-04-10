@@ -1,5 +1,6 @@
 package rong.im.demo.activity;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.FloatRange;
@@ -13,6 +14,8 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 
+import io.rong.imkit.fragment.ConversationListFragment;
+import io.rong.imlib.model.Conversation;
 import rong.im.demo.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,29 +31,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initView();
+        initConversationList();
+    }
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-
+    private void initView() {
         titleIconList.add(new TitleIcon(findViewById(R.id.titleicon_im), R.mipmap.titlebar_im_nor, R.mipmap.titlebar_im_sel));
         titleIconList.add(new TitleIcon(findViewById(R.id.titleicon_contact), R.mipmap.titlebar_contact_nor, R.mipmap.titlebar_contact_sel));
         titleIconList.add(new TitleIcon(findViewById(R.id.titleicon_discovery), R.mipmap.titlebar_discovery_nor, R.mipmap.titlebar_discovery_sel));
         titleIconList.add(new TitleIcon(findViewById(R.id.titleicon_me), R.mipmap.titlebar_me_nor, R.mipmap.titlebar_me_sel));
-        for (int i = 0; i < titleIconList.size(); i++) {
-            final int index = i;
-            titleIconList.get(i).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    titleIconList.get(viewPager.getCurrentItem()).setGradient(0.0f);
-                    viewPager.setCurrentItem(index, false);
-                }
-            });
-        }
 
         viewPagerList.add(getLayoutInflater().inflate(R.layout.main_pager_im, null));
         viewPagerList.add(getLayoutInflater().inflate(R.layout.main_pager_contact, null));
         viewPagerList.add(getLayoutInflater().inflate(R.layout.main_pager_discovery, null));
         viewPagerList.add(getLayoutInflater().inflate(R.layout.main_pager_me, null));
 
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
@@ -73,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
                 container.removeView(viewPagerList.get(position));
             }
         });
-
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -91,6 +86,29 @@ public class MainActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
+
+        for (int i = 0; i < titleIconList.size(); i++) {
+            final int index = i;
+            titleIconList.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    titleIconList.get(viewPager.getCurrentItem()).setGradient(0.0f);
+                    viewPager.setCurrentItem(index, false);
+                }
+            });
+        }
+    }
+
+    private void initConversationList() {
+        ConversationListFragment fragment = (ConversationListFragment) getSupportFragmentManager().findFragmentById(R.id.conversation_list);
+        Uri uri = Uri.parse("rong://" + getApplicationInfo().packageName).buildUpon()
+                .appendPath("conversationlist")
+                .appendQueryParameter(Conversation.ConversationType.PRIVATE.getName(), "false")
+                .appendQueryParameter(Conversation.ConversationType.GROUP.getName(), "true")
+                .appendQueryParameter(Conversation.ConversationType.DISCUSSION.getName(), "false")
+                .appendQueryParameter(Conversation.ConversationType.SYSTEM.getName(), "false")
+                .build();
+        fragment.setUri(uri);
     }
 
     private class TitleIcon {

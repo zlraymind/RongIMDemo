@@ -20,6 +20,7 @@ import rong.im.demo.util.BmobUtil;
 import rong.im.demo.util.Const;
 import rong.im.demo.util.RongUtil;
 import rong.im.demo.widget.LoginEditBox;
+import rong.im.demo.widget.WaitingDialog;
 
 public class LoginActivity extends AppCompatActivity implements TextWatcher, Handler.Callback {
 
@@ -32,7 +33,8 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
     private LoginEditBox username;
     private LoginEditBox password;
     private Button login;
-    private TextView signup;
+    private TextView signUp;
+    private WaitingDialog waitingDialog;
 
     private int state;
     private Handler handler = new Handler(this);
@@ -48,7 +50,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
         username = new LoginEditBox(findViewById(R.id.layout_username), "用户名", "你的登录名");
         password = new LoginEditBox(findViewById(R.id.layout_password), "密码", "填写密码");
         login = (Button) findViewById(R.id.login);
-        signup = (TextView) findViewById(R.id.sign_up);
+        signUp = (TextView) findViewById(R.id.sign_up);
 
         username.setTextChangedListener(this);
         password.setTextChangedListener(this);
@@ -56,11 +58,13 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                waitingDialog = new WaitingDialog(LoginActivity.this);
+                waitingDialog.show();
                 state = STATE_LOGIN;
                 BmobUtil.loginToServer(getUser(), LoginActivity.this, handler);
             }
         });
-        signup.setOnClickListener(new View.OnClickListener() {
+        signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
@@ -80,6 +84,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
     public boolean handleMessage(Message msg) {
         Log.d(TAG, "handleMessage state = " + state + "; msg.what = " + msg.what);
         if (msg.what == Const.REQUEST_FAILED) {
+            waitingDialog.dismiss();
             Toast.makeText(LoginActivity.this, (String) msg.obj, Toast.LENGTH_SHORT).show();
             return true;
         }
@@ -93,6 +98,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
                 RongUtil.connectIMServer(token, handler);
                 break;
             case STATE_CONNECT_IM_SERVER:
+                waitingDialog.dismiss();
                 Intent intent = new Intent();
                 intent.setClass(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
