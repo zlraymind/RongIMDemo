@@ -22,6 +22,7 @@ import rong.im.demo.util.BmobUtil;
 import rong.im.demo.util.Const;
 import rong.im.demo.util.RongUtil;
 import rong.im.demo.widget.LoginEditBox;
+import rong.im.demo.widget.WaitingDialog;
 import rong.im.demo.widget.WarringDialog;
 
 public class SignUpActivity extends AppCompatActivity implements TextWatcher, Handler.Callback {
@@ -40,6 +41,7 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
     private ImageView back;
     private ImageView portrait;
     private Button signUp;
+    private WaitingDialog waitingDialog;
 
     private int state;
     private Handler handler = new Handler(this);
@@ -73,6 +75,7 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
             @Override
             public void onClick(View v) {
                 hideInputPanel();
+
                 if (username.getText().length() < 4) {
                     WarringDialog dialog = new WarringDialog(SignUpActivity.this);
                     dialog.setSubject("格式错误");
@@ -80,7 +83,6 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
                     dialog.show();
                     return;
                 }
-
                 if (password.getText().length() < 6) {
                     WarringDialog dialog = new WarringDialog(SignUpActivity.this);
                     dialog.setSubject("格式错误");
@@ -89,6 +91,8 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
                     return;
                 }
 
+                waitingDialog = new WaitingDialog(SignUpActivity.this);
+                waitingDialog.show();
                 state = STATE_CHECK_USERNAME;
                 BmobUtil.checkUserFromServer(username.getText(), SignUpActivity.this, handler);
             }
@@ -120,6 +124,7 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
     public boolean handleMessage(Message msg) {
         Log.d(TAG, "handleMessage state = " + state + "; msg.what = " + msg.what);
         if (msg.what == Const.REQUEST_FAILED) {
+            waitingDialog.dismiss();
             Toast.makeText(SignUpActivity.this, (String) msg.obj, Toast.LENGTH_SHORT).show();
             return true;
         }
@@ -147,6 +152,7 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
                 RongUtil.connectIMServer(token, handler);
                 break;
             case STATE_CONNECT_IM_SERVER:
+                waitingDialog.dismiss();
                 Intent intent = new Intent();
                 intent.setClass(SignUpActivity.this, MainActivity.class);
                 startActivity(intent);
