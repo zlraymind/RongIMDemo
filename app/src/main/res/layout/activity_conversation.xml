@@ -18,11 +18,11 @@
             android:src="@drawable/toolbar_back"/>
 
         <TextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="16dp"
-            android:text="融云演示"
             android:textColor="#ffffff"
             android:textSize="18sp"/>
     </LinearLayout>

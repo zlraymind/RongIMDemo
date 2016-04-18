@@ -10,5 +10,6 @@ public class WaitingDialog extends Dialog {
     public WaitingDialog(Context context) {
         super(context, R.style.WaitingDialog);
         setContentView(R.layout.dialog_waitting);
+        setCancelable(false);
     }
 }
