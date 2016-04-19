@@ -18,7 +18,7 @@ public class DiscoveryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.main_fragment_discovery, container,false);
-        PanelItem streamShow = new PanelItem(root.findViewById(R.id.discovery_stream_show), R.mipmap.stream_show, "视频直播", true);
+        PanelItem streamShow = new PanelItem(root.findViewById(R.id.discovery_stream_show), R.mipmap.panel_stream_show, "视频直播", true);
         streamShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -26,7 +26,7 @@ public class DiscoveryFragment extends Fragment {
             }
         });
 
-        PanelItem watchShow = new PanelItem(root.findViewById(R.id.discovery_watch_show), R.mipmap.watch_show, "观看直播", false);
+        PanelItem watchShow = new PanelItem(root.findViewById(R.id.discovery_watch_show), R.mipmap.panel_watch_show, "观看直播", false);
         watchShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

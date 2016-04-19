@@ -46,8 +46,14 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="24dp"
-            android:src="@mipmap/qr_code"/>
-
+            android:src="@mipmap/panel_qr_code"/>
     </RelativeLayout>
+
+    <include
+        android:id="@+id/me_logout"
+        layout="@layout/panel_item"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="18dp"/>
 
 </LinearLayout>

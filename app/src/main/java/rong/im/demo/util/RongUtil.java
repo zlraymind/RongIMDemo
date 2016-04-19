@@ -9,6 +9,10 @@ import io.rong.imlib.RongIMClient;
 public class RongUtil {
 
     public static void connectIMServer(String token, final Handler handler) {
+        connectIMServer(token, handler, 0);
+    }
+
+    public static void connectIMServer(String token, final Handler handler, final long delayMillis) {
         RongIM.connect(token, new RongIMClient.ConnectCallback() {
             @Override
             public void onTokenIncorrect() {
@@ -20,7 +24,7 @@ public class RongUtil {
 
             @Override
             public void onSuccess(String userId) {
-                handler.sendEmptyMessage(Const.REQUEST_SUCCESS);
+                handler.sendEmptyMessageDelayed(Const.REQUEST_SUCCESS, delayMillis);
             }
 
             @Override

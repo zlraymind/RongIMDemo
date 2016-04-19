@@ -1,6 +1,8 @@
 package rong.im.demo.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +20,7 @@ import com.squareup.okhttp.internal.http.OkHeaders;
 
 import rong.im.demo.R;
 import rong.im.demo.model.User;
+import rong.im.demo.util.AppUtil;
 import rong.im.demo.util.BmobUtil;
 import rong.im.demo.util.Const;
 import rong.im.demo.util.RongUtil;
@@ -28,6 +31,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
 
     private static final String TAG = "LoginActivity";
 
+    private static final int STATE_NONE = 0;
     private static final int STATE_LOGIN = 1;
     private static final int STATE_REQUEST_TOKEN = 2;
     private static final int STATE_CONNECT_IM_SERVER = 3;
@@ -38,7 +42,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
     private TextView signUp;
     private WaitingDialog waitingDialog;
 
-    private int state;
+    private int state = STATE_NONE;
     private Handler handler = new Handler(this);
 
     @Override
@@ -46,6 +50,14 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (state == STATE_NONE) {
+            autoLogin();
+        }
     }
 
     private void initView() {
@@ -82,6 +94,19 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
         return user;
     }
 
+    private void autoLogin() {
+        String name = AppUtil.getSavedUsername(this);
+        String token = AppUtil.getSavedToken(this);
+        if (!token.isEmpty()) {
+            username.setText(name);
+            password.setText("********");
+            waitingDialog = new WaitingDialog(LoginActivity.this);
+            waitingDialog.show();
+            state = STATE_CONNECT_IM_SERVER;
+            RongUtil.connectIMServer(token, handler, 1000);
+        }
+    }
+
     @Override
     public boolean handleMessage(Message msg) {
         Log.d(TAG, "handleMessage state = " + state + "; msg.what = " + msg.what);
@@ -92,21 +117,22 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
         }
 
         switch (state++) {
-            case STATE_LOGIN:
-                BmobUtil.requestToken(getUser(), this, handler);
-                break;
-            case STATE_REQUEST_TOKEN:
-                String token = (String) msg.obj;
-                RongUtil.connectIMServer(token, handler);
-                break;
-            case STATE_CONNECT_IM_SERVER:
-                waitingDialog.dismiss();
-                Intent intent = new Intent();
-                intent.setClass(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-                break;
-            default:
+        case STATE_LOGIN:
+            BmobUtil.requestToken(getUser(), this, handler);
+            break;
+        case STATE_REQUEST_TOKEN:
+            String token = (String) msg.obj;
+            AppUtil.saveUserInfo(this, username.getText(), token);
+            RongUtil.connectIMServer(token, handler);
+            break;
+        case STATE_CONNECT_IM_SERVER:
+            waitingDialog.dismiss();
+            Intent intent = new Intent();
+            intent.setClass(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            break;
+        default:
         }
         return true;
     }

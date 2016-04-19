@@ -3,7 +3,6 @@ package rong.im.demo.widget;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import rong.im.demo.R;
@@ -33,6 +32,10 @@ public class LoginEditBox {
 
     public String getText() {
         return content.getText().toString();
+    }
+
+    public void setText(String value) {
+        content.setText(value);
     }
 
     public void setTextChangedListener(TextWatcher watcher) {

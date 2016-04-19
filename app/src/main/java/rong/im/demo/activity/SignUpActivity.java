@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import rong.im.demo.R;
 import rong.im.demo.model.User;
+import rong.im.demo.util.AppUtil;
 import rong.im.demo.util.BmobUtil;
 import rong.im.demo.util.Const;
 import rong.im.demo.util.RongUtil;
@@ -149,6 +150,7 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
                 break;
             case STATE_REQUEST_TOKEN:
                 String token = (String) msg.obj;
+                AppUtil.saveUserInfo(this, username.getText(), token);
                 RongUtil.connectIMServer(token, handler);
                 break;
             case STATE_CONNECT_IM_SERVER:
