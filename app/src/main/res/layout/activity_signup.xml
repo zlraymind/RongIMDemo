@@ -81,5 +81,4 @@
         android:text="注册"
         android:textColor="@drawable/login_button_text"
         android:textSize="16sp"/>
-
 </RelativeLayout>

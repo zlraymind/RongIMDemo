@@ -33,5 +33,4 @@
         android:textColorHint="#dddddd"
         android:textCursorDrawable="@null"
         android:textSize="16sp"/>
-
 </RelativeLayout>
