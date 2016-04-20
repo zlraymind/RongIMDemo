@@ -46,6 +46,19 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.LiveChatRoomActivity"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="stateHidden|adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data
+                    android:host="io.rong.fast"
+                    android:pathPrefix="/conversation/"
+                    android:scheme="rong"/>
+            </intent-filter>
+        </activity>
+
         <!-- Voip caller Activity -->
         <activity
             android:name="io.rong.voipkit.activity.CallSideActivity"
@@ -82,5 +95,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_LOGS"/>
+
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
 </manifest>

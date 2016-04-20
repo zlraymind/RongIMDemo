@@ -1,5 +1,6 @@
 package rong.im.demo.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -8,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import rong.im.demo.R;
+import rong.im.demo.activity.LiveChatRoomActivity;
+import rong.im.demo.activity.LoginActivity;
+import rong.im.demo.activity.MainActivity;
 import rong.im.demo.widget.PanelItem;
 
 public class DiscoveryFragment extends Fragment {
@@ -31,6 +35,9 @@ public class DiscoveryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "观看直播");
+                Intent intent = new Intent();
+                intent.setClass(DiscoveryFragment.this.getContext(), LiveChatRoomActivity.class);
+                startActivity(intent);
             }
         });
         return root;
