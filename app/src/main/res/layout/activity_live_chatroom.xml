@@ -25,6 +25,24 @@
             android:layout_marginLeft="16dp"
             android:textColor="#ffffff"
             android:textSize="18sp"/>
+
+        <Button
+            android:id="@+id/play"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:text="play"/>
+
+        <Button
+            android:id="@+id/pause"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:text="pause"/>
+
+        <Button
+            android:id="@+id/stop"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:text="stop"/>
     </LinearLayout>
 
     <RelativeLayout

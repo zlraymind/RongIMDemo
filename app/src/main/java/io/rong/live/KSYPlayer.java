@@ -1,18 +1,23 @@
 package io.rong.live;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.ksyun.media.player.IMediaPlayer;
 import com.ksyun.media.player.KSYMediaPlayer;
 
 import java.io.IOException;
 
-public class KSYPlayer implements StreamPlayer {
+public class KSYPlayer implements StreamPlayer, IMediaPlayer.OnErrorListener, IMediaPlayer.OnPreparedListener, IMediaPlayer.OnCompletionListener {
+
+    private static final String TAG = "KSYPlayer";
 
     private SurfaceHolder mSurfaceHolder;
     private KSYMediaPlayer mKSYMediaPlayer;
+    private StreamListener mStreamListener;
 
     public KSYPlayer(Context context) {
         mKSYMediaPlayer = new KSYMediaPlayer.Builder(context).build();
@@ -21,8 +26,11 @@ public class KSYPlayer implements StreamPlayer {
     }
 
     @Override
-    public void setListener() {
-
+    public void setStreamListener(StreamListener listener) {
+        mStreamListener = listener;
+        mKSYMediaPlayer.setOnErrorListener(this);
+        mKSYMediaPlayer.setOnPreparedListener(this);
+        mKSYMediaPlayer.setOnCompletionListener(this);
     }
 
     @Override
@@ -32,12 +40,12 @@ public class KSYPlayer implements StreamPlayer {
 
     @Override
     public void pause() {
-
+        mKSYMediaPlayer.pause();
     }
 
     @Override
     public void stop() {
-
+        mKSYMediaPlayer.stop();
     }
 
     @Override
@@ -84,4 +92,30 @@ public class KSYPlayer implements StreamPlayer {
             }
         }
     };
+
+    @Override
+    public boolean onError(IMediaPlayer mp, int what, int extra) {
+        Log.e(TAG, "onError code = " + what);
+        int code = StreamListener.ERROR_UNKNOWN;
+        switch (what) {
+            case KSYMediaPlayer.MEDIA_ERROR_SERVER_DIED:
+                code = StreamListener.ERROR_SERVER_DIED;
+                break;
+            default:
+        }
+        mStreamListener.onError(code);
+        return false;
+    }
+
+    @Override
+    public void onPrepared(IMediaPlayer iMediaPlayer) {
+        Log.e(TAG, "onPrepared");
+        mStreamListener.onPrepared();
+    }
+
+    @Override
+    public void onCompletion(IMediaPlayer iMediaPlayer) {
+        Log.e(TAG, "onCompletion");
+        mStreamListener.onCompletion();
+    }
 }

@@ -4,15 +4,15 @@ import android.view.SurfaceView;
 
 public interface StreamPlayer {
 
-    public void setListener();
+    void setStreamListener(StreamListener listener);
 
-    public void play();
+    void play();
 
-    public void pause();
+    void pause();
 
-    public void stop();
+    void stop();
 
-    public void setUrl(String url);
+    void setUrl(String url);
 
-    public void setView(SurfaceView view);
+    void setView(SurfaceView view);
 }
