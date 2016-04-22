@@ -96,10 +96,10 @@ public class KSYPlayer implements StreamPlayer, IMediaPlayer.OnErrorListener, IM
     @Override
     public boolean onError(IMediaPlayer mp, int what, int extra) {
         Log.e(TAG, "onError code = " + what);
-        int code = StreamListener.ERROR_UNKNOWN;
+        StreamListener.StreamError code = StreamListener.StreamError.ERROR_UNKNOWN;
         switch (what) {
             case KSYMediaPlayer.MEDIA_ERROR_SERVER_DIED:
-                code = StreamListener.ERROR_SERVER_DIED;
+                code = StreamListener.StreamError.ERROR_SERVER_DIED;
                 break;
             default:
         }

@@ -2,10 +2,12 @@ package io.rong.live;
 
 public interface StreamListener {
 
-    int ERROR_UNKNOWN = -1;
-    int ERROR_SERVER_DIED = -100;
+    enum StreamError {
+        ERROR_UNKNOWN,
+        ERROR_SERVER_DIED
+    }
 
-    void onError(int errorCode);
+    void onError(StreamError error);
 
     void onPrepared();
 

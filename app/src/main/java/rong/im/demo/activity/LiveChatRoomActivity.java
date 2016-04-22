@@ -59,8 +59,8 @@ public class LiveChatRoomActivity extends AppCompatActivity {
 
         liveClient.setStreamListener(new StreamListener() {
             @Override
-            public void onError(int errorCode) {
-                Log.d(TAG, "onError errorCode = " + errorCode);
+            public void onError(StreamListener.StreamError error) {
+                Log.d(TAG, "onError errorCode = " + error);
             }
 
             @Override
