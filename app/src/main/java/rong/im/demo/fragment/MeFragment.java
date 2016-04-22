@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import io.rong.imlib.RongIMClient;
 import rong.im.demo.R;
 import rong.im.demo.activity.LoginActivity;
 import rong.im.demo.util.AppUtil;
@@ -27,6 +28,8 @@ public class MeFragment extends Fragment {
             public void onClick(View v) {
                 Activity activity = MeFragment.this.getActivity();
                 AppUtil.clearUserInfo(activity);
+                RongIMClient.getInstance().logout();
+
                 Intent intent = new Intent();
                 intent.setClass(activity, LoginActivity.class);
                 startActivity(intent);

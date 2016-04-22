@@ -55,6 +55,8 @@ public class ContactFragment extends Fragment {
             if (view == null) {
                 view = mInflater.inflate(R.layout.contact_list_item, parent, false);
                 holder = new ViewHolder();
+                holder.header = view.findViewById(R.id.header);
+                holder.initial = (TextView) view.findViewById(R.id.initial);
                 holder.image = (ImageView) view.findViewById(R.id.image);
                 holder.name = (TextView) view.findViewById(R.id.name);
                 view.setTag(holder);
@@ -70,6 +72,8 @@ public class ContactFragment extends Fragment {
         }
 
         private class ViewHolder {
+            View header;
+            TextView initial;
             ImageView image;
             TextView name;
         }
