@@ -15,8 +15,7 @@ public class DiscoveryFragment extends Fragment {
     private static final String TAG = "DiscoveryFragment";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.main_fragment_discovery, container,false);
         PanelItem streamShow = new PanelItem(root.findViewById(R.id.discovery_stream_show), R.mipmap.panel_stream_show, "视频直播", true);
         streamShow.setOnClickListener(new View.OnClickListener() {

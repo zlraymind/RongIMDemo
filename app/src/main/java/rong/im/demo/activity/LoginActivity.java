@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
                 waitingDialog = new WaitingDialog(LoginActivity.this);
                 waitingDialog.show();
                 state = STATE_LOGIN;
-                BmobUtil.loginToServer(getUser(), LoginActivity.this, handler);
+                BmobUtil.loginToServer(getUser(), handler);
             }
         });
         signUp.setOnClickListener(new View.OnClickListener() {
@@ -91,8 +91,8 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
     }
 
     private void autoLogin() {
-        String name = AppUtil.getSavedUsername(this);
-        String token = AppUtil.getSavedToken(this);
+        String name = AppUtil.getCachedUsername();
+        String token = AppUtil.getCachedToken();
         if (!token.isEmpty()) {
             username.setText(name);
             password.setText("********");
@@ -114,7 +114,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
 
         switch (state++) {
             case STATE_LOGIN:
-                BmobUtil.requestToken(getUser(), this, handler);
+                BmobUtil.requestToken(getUser(), handler);
                 break;
             case STATE_REQUEST_TOKEN:
                 String token = (String) msg.obj;

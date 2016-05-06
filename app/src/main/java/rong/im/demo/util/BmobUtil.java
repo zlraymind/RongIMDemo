@@ -47,10 +47,10 @@ public class BmobUtil {
         }
     }
 
-    public static void checkUserFromServer(String username, final Context context, final Handler handler) {
+    public static void checkUserFromServer(String username, final Handler handler) {
         BmobQuery<LoginUser> query = new BmobQuery<>();
         query.addWhereEqualTo("username", username);
-        query.findObjects(context, new FindListener<LoginUser>() {
+        query.findObjects(AppUtil.getContext(), new FindListener<LoginUser>() {
             @Override
             public void onSuccess(List<LoginUser> object) {
                 Log.d(TAG, "checkUserFromServer onSuccess");
@@ -68,15 +68,15 @@ public class BmobUtil {
         });
     }
 
-    public static void uploadPortraitToServer(String picPath, final Context context, final Handler handler) {
+    public static void uploadPortraitToServer(String picPath, final Handler handler) {
         final BmobFile bmobFile = new BmobFile(new File(picPath));
-        bmobFile.uploadblock(context, new UploadFileListener() {
+        bmobFile.uploadblock(AppUtil.getContext(), new UploadFileListener() {
             @Override
             public void onSuccess() {
                 Log.d(TAG, "uploadPortraitToServer onSuccess");
                 Message message = Message.obtain();
                 message.what = Const.REQUEST_SUCCESS;
-                message.obj = bmobFile.getFileUrl(context);
+                message.obj = bmobFile.getFileUrl(AppUtil.getContext());
                 handler.sendMessage(message);
             }
 
@@ -91,14 +91,14 @@ public class BmobUtil {
         });
     }
 
-    public static void addUserToServer(User user, final Context context, final Handler handler) {
+    public static void addUserToServer(User user, final Handler handler) {
         LoginUser loginUser = new LoginUser();
         loginUser.setUsername(user.username);
         loginUser.setPassword(user.password);
         loginUser.setNickname(user.nickname);
         loginUser.setPortrait(user.portrait);
 
-        loginUser.signUp(context, new SaveListener() {
+        loginUser.signUp(AppUtil.getContext(), new SaveListener() {
             @Override
             public void onSuccess() {
                 Log.d(TAG, "addUserToServer onSuccess");
@@ -116,12 +116,12 @@ public class BmobUtil {
         });
     }
 
-    public static void loginToServer(User user, final Context context, final Handler handler) {
+    public static void loginToServer(User user, final Handler handler) {
         LoginUser loginUser = new LoginUser();
         loginUser.setUsername(user.username);
         loginUser.setPassword(user.password);
 
-        loginUser.login(context, new SaveListener() {
+        loginUser.login(AppUtil.getContext(), new SaveListener() {
             @Override
             public void onSuccess() {
                 Log.d(TAG, "loginToServer onSuccess");
@@ -139,7 +139,7 @@ public class BmobUtil {
         });
     }
 
-    public static void requestToken(User user, final Context context, final Handler handler) {
+    public static void requestToken(User user, final Handler handler) {
         JSONObject params = new JSONObject();
         try {
             params.put("userId", user.username);
@@ -155,7 +155,7 @@ public class BmobUtil {
         }
 
         AsyncCustomEndpoints cloudCode = new AsyncCustomEndpoints();
-        cloudCode.callEndpoint(context, "requestToken", params, new CloudCodeListener() {
+        cloudCode.callEndpoint(AppUtil.getContext(), "requestToken", params, new CloudCodeListener() {
             @Override
             public void onSuccess(Object result) {
                 Message msg = Message.obtain();

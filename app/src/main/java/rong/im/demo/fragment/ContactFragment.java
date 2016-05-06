@@ -17,8 +17,7 @@ public class ContactFragment extends Fragment {
     ListView contactList;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.main_fragment_contact, container, false);
         contactList = (ListView) root.findViewById(R.id.contact_list);
         contactList.setAdapter(new ContactListAdapter());

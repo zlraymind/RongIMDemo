@@ -6,6 +6,7 @@ import android.content.Context;
 
 import cn.bmob.v3.Bmob;
 import io.rong.imkit.RongIM;
+import rong.im.demo.util.AppUtil;
 
 public class App extends Application {
     private static final String TAG = "App";
@@ -19,6 +20,7 @@ public class App extends Application {
         if (getApplicationInfo().packageName.equals(getCurProcessName(getApplicationContext())) ||
                 "io.rong.push".equals(getCurProcessName(getApplicationContext()))) {
             RongIM.init(this);
+            AppUtil.init(this);
         }
     }
 

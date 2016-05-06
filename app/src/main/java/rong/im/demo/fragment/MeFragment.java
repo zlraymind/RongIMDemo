@@ -27,7 +27,7 @@ public class MeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Activity activity = MeFragment.this.getActivity();
-                AppUtil.clearUserInfo(activity);
+                AppUtil.clearUserInfoCached();
                 RongIMClient.getInstance().logout();
 
                 Intent intent = new Intent();

@@ -95,7 +95,7 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
                 waitingDialog = new WaitingDialog(SignUpActivity.this);
                 waitingDialog.show();
                 state = STATE_CHECK_USERNAME;
-                BmobUtil.checkUserFromServer(username.getText(), SignUpActivity.this, handler);
+                BmobUtil.checkUserFromServer(username.getText(), handler);
             }
         });
     }
@@ -134,19 +134,19 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
             case STATE_CHECK_USERNAME:
                 if (portrait.getTag() == null) {
                     state = STATE_SIGN_UP;
-                    BmobUtil.addUserToServer(getUser(), this, handler);
+                    BmobUtil.addUserToServer(getUser(), handler);
                 } else {
-                    BmobUtil.uploadPortraitToServer((String) portrait.getTag(), this, handler);
+                    BmobUtil.uploadPortraitToServer((String) portrait.getTag(), handler);
                 }
                 break;
             case STATE_UPLOAD_PORTRAIT:
-                BmobUtil.addUserToServer(getUser(), this, handler);
+                BmobUtil.addUserToServer(getUser(), handler);
                 break;
             case STATE_SIGN_UP:
-                BmobUtil.loginToServer(getUser(), this, handler);
+                BmobUtil.loginToServer(getUser(), handler);
                 break;
             case STATE_LOGIN:
-                BmobUtil.requestToken(getUser(), this, handler);
+                BmobUtil.requestToken(getUser(), handler);
                 break;
             case STATE_REQUEST_TOKEN:
                 String token = (String) msg.obj;
