@@ -32,6 +32,12 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.NewFriendActivity"
+                  android:screenOrientation="portrait"/>
+
+        <activity android:name=".activity.FindFriendActivity"
+                  android:screenOrientation="portrait"/>
+
         <activity
             android:name=".activity.ConversationActivity"
             android:screenOrientation="portrait"

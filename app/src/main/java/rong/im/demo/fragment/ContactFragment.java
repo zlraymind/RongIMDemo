@@ -1,5 +1,6 @@
 package rong.im.demo.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import rong.im.demo.R;
+import rong.im.demo.activity.NewFriendActivity;
 
 public class ContactFragment extends Fragment {
 
@@ -25,11 +27,10 @@ public class ContactFragment extends Fragment {
     }
 
     private class ContactListAdapter extends BaseAdapter {
-
-        private LayoutInflater mInflater;
+        private LayoutInflater inflater;
 
         public ContactListAdapter() {
-            mInflater = ContactFragment.this.getActivity().getLayoutInflater();
+            inflater = ContactFragment.this.getActivity().getLayoutInflater();
         }
 
         @Override
@@ -52,9 +53,10 @@ public class ContactFragment extends Fragment {
             ViewHolder holder;
             View view = convertView;
             if (view == null) {
-                view = mInflater.inflate(R.layout.contact_list_item, parent, false);
+                view = inflater.inflate(R.layout.contact_list_item, parent, false);
                 holder = new ViewHolder();
                 holder.header = view.findViewById(R.id.header);
+                holder.body = view.findViewById(R.id.body);
                 holder.initial = (TextView) view.findViewById(R.id.initial);
                 holder.image = (ImageView) view.findViewById(R.id.image);
                 holder.name = (TextView) view.findViewById(R.id.name);
@@ -64,6 +66,13 @@ public class ContactFragment extends Fragment {
             }
 
             if (position == 0) {
+                holder.body.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ContactFragment.this.getActivity(), NewFriendActivity.class);
+                        ContactFragment.this.startActivity(intent);
+                    }
+                });
                 holder.image.setImageResource(R.mipmap.new_friend);
                 holder.name.setText("新的朋友");
             }
@@ -72,6 +81,7 @@ public class ContactFragment extends Fragment {
 
         private class ViewHolder {
             View header;
+            View body;
             TextView initial;
             ImageView image;
             TextView name;

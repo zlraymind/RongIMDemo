@@ -7,6 +7,8 @@
 
     <ListView
         android:id="@+id/contact_list"
+        android:listSelector="@android:color/transparent"
+        android:divider="@null"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </LinearLayout>
