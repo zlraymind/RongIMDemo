@@ -2,7 +2,6 @@ package rong.im.demo.widget;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;

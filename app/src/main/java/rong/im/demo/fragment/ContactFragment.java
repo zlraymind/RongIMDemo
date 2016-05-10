@@ -58,7 +58,7 @@ public class ContactFragment extends Fragment {
                 holder.header = view.findViewById(R.id.header);
                 holder.body = view.findViewById(R.id.body);
                 holder.initial = (TextView) view.findViewById(R.id.initial);
-                holder.image = (ImageView) view.findViewById(R.id.image);
+                holder.image = (ImageView) view.findViewById(R.id.toolbar_find_icon);
                 holder.name = (TextView) view.findViewById(R.id.name);
                 view.setTag(holder);
             } else {

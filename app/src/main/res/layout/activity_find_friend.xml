@@ -25,7 +25,7 @@
             android:layout_marginRight="8dp">
 
             <ImageView
-                android:id="@+id/image"
+                android:id="@+id/toolbar_find_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -33,21 +33,35 @@
                 android:src="@mipmap/find_glass_white"/>
 
             <EditText
-                android:id="@+id/content"
-                android:layout_width="match_parent"
+                android:id="@+id/search_edit"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@id/image"
+                android:layout_alignTop="@id/toolbar_find_icon"
                 android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_marginTop="3dp"
-                android:layout_toRightOf="@id/image"
+                android:layout_toLeftOf="@+id/clear_text"
+                android:layout_toRightOf="@id/toolbar_find_icon"
                 android:background="@null"
                 android:hint="搜索"
+                android:imeOptions="actionSearch"
+                android:singleLine="true"
                 android:textColor="#ffffff"
                 android:textColorHint="#474b4c"
                 android:textCursorDrawable="@null"
                 android:textSize="16sp"/>
 
+            <ImageView
+                android:id="@id/clear_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/underline"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:src="@mipmap/toolbar_clear_cross"/>
+
             <View
+                android:id="@id/underline"
                 android:layout_width="match_parent"
                 android:layout_height="0.66dp"
                 android:layout_alignParentBottom="true"
@@ -55,29 +69,48 @@
                 android:layout_marginBottom="8dp"
                 android:background="#64a352"/>
         </RelativeLayout>
-
-        <Button
-            android:id="@+id/send"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/find_friend_btn_bg"
-            android:enabled="false"
-            android:minWidth="0dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="查找"
-            android:textColor="#ffffff"
-            android:textSize="14sp"/>
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/search_btn"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@drawable/panel_background"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/item_find_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="13dp"
+            android:src="@mipmap/find_friend_item_icon"/>
+
+        <TextView
+            android:id="@+id/search_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/item_find_icon"
+            android:text="搜索:"
+            android:textColor="#000000"
+            android:textSize="16sp"/>
+
+        <View
+            android:id="@id/underline"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
+            android:background="#d8d8d8"/>
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/find_friend_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffff"/>
-
 </LinearLayout>
