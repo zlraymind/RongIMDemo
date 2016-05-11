@@ -38,6 +38,9 @@
         <activity android:name=".activity.FindFriendActivity"
                   android:screenOrientation="portrait"/>
 
+        <activity android:name=".activity.InviteActivity"
+                  android:screenOrientation="portrait"/>
+
         <activity
             android:name=".activity.ConversationActivity"
             android:screenOrientation="portrait"

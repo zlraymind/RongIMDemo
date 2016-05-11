@@ -1,5 +1,6 @@
 package rong.im.demo.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import rong.im.demo.R;
 import rong.im.demo.model.User;
@@ -183,6 +183,13 @@ public class FindFriendActivity extends AppCompatActivity implements Handler.Cal
             if (convertView == null) {
                 itemView = new ContactItemView(FindFriendActivity.this);
                 itemView.setTag(itemView);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(FindFriendActivity.this, InviteActivity.class);
+                        FindFriendActivity.this.startActivity(intent);
+                    }
+                });
             } else {
                 itemView = (ContactItemView) convertView.getTag();
             }

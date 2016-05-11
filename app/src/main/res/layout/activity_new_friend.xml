@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="#ebebeb"
-              android:orientation="vertical">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ebebeb"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/toolbar"
@@ -34,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_marginTop="16dp"
-        android:background="#ffffff">
+        android:background="@drawable/panel_background">
 
         <ImageView
             android:id="@id/toolbar_find_icon"
@@ -51,7 +52,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="4dp"
             android:layout_toRightOf="@id/toolbar_find_icon"
-            android:text="用户名"
+            android:text="输入用户名或昵称, 搜索新朋友"
             android:textColor="#c4c4c4"/>
 
         <View
@@ -66,8 +67,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:visibility="gone">
+        android:layout_height="35dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -80,12 +80,26 @@
             android:textSize="12sp"/>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/none_friend"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            android:text="无"/>
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/new_friend_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffff"
         android:divider="@null"
-        android:listSelector="@android:color/transparent"/>
-
+        android:listSelector="@android:color/transparent"
+        android:visibility="gone"/>
 </LinearLayout>
