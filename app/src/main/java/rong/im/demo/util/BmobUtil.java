@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.AsyncCustomEndpoints;
@@ -24,28 +25,6 @@ import rong.im.demo.model.User;
 public class BmobUtil {
 
     private static final String TAG = "BmobUtil";
-
-    private static class LoginUser extends BmobUser {
-
-        private String nickname;
-        private String portrait;
-
-        public void setNickname(String name) {
-            nickname = name;
-        }
-
-        public String getNickname() {
-            return nickname;
-        }
-
-        public void setPortrait(String path) {
-            portrait = path;
-        }
-
-        public String getPortrait() {
-            return portrait;
-        }
-    }
 
     public static void checkUserFromServer(String username, final Handler handler) {
         BmobQuery<LoginUser> query = new BmobQuery<>();
@@ -179,5 +158,63 @@ public class BmobUtil {
                 handler.sendMessage(msg);
             }
         });
+    }
+
+    public static void queryLoginUser(String searchText, final Handler handler) {
+        BmobQuery<LoginUser> queryID = new BmobQuery<>();
+        queryID.addWhereContains("username", searchText);
+        BmobQuery<LoginUser> queryNick = new BmobQuery<>();
+        queryNick.addWhereContains("nickname", searchText);
+        List<BmobQuery<LoginUser>> queries = new ArrayList<>();
+        queries.add(queryID);
+        queries.add(queryNick);
+
+        BmobQuery<LoginUser> mainQuery = new BmobQuery<>();
+        mainQuery.or(queries);
+        mainQuery.findObjects(AppUtil.getContext(), new FindListener<LoginUser>() {
+            @Override
+            public void onSuccess(List<LoginUser> object) {
+                Log.d(TAG, "queryLoginUser onSuccess");
+                ArrayList<User> userList = new ArrayList<>();
+                for (LoginUser user : object) {
+                    Log.d(TAG, "user.name = " + user.getUsername());
+                    userList.add(new User(user.getUsername(), user.getNickname(), user.getPortrait()));
+                }
+                Message message = Message.obtain();
+                message.what = Const.REQUEST_SUCCESS;
+                message.obj = userList;
+                handler.sendMessage(message);
+            }
+
+            @Override
+            public void onError(int code, String msg) {
+                Log.e(TAG, "queryLoginUser onFailure code = " + code + "; msg = " + msg);
+                Message message = Message.obtain();
+                message.what = Const.REQUEST_FAILED;
+                message.obj = msg;
+                handler.sendMessage(message);
+            }
+        });
+    }
+
+    private static class LoginUser extends BmobUser {
+        private String nickname;
+        private String portrait;
+
+        public void setNickname(String name) {
+            nickname = name;
+        }
+
+        public String getNickname() {
+            return nickname;
+        }
+
+        public void setPortrait(String path) {
+            portrait = path;
+        }
+
+        public String getPortrait() {
+            return portrait;
+        }
     }
 }

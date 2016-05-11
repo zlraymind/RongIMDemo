@@ -30,7 +30,10 @@ public class WarringDialog extends Dialog {
     }
 
     public void setSubject(String text) {
-        title.setText(text);
+        if (!text.isEmpty()) {
+            title.setVisibility(View.VISIBLE);
+            title.setText(text);
+        }
     }
 
     public void setBody(String text) {

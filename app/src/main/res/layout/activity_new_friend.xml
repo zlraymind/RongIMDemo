@@ -84,6 +84,8 @@
         android:id="@+id/new_friend_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff"/>
+        android:background="#ffffff"
+        android:divider="@null"
+        android:listSelector="@android:color/transparent"/>
 
 </LinearLayout>

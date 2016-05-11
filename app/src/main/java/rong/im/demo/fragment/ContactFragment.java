@@ -12,7 +12,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import rong.im.demo.R;
+import rong.im.demo.activity.FindFriendActivity;
 import rong.im.demo.activity.NewFriendActivity;
+import rong.im.demo.model.User;
+import rong.im.demo.widget.ContactItemView;
 
 public class ContactFragment extends Fragment {
 
@@ -50,41 +53,24 @@ public class ContactFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            View view = convertView;
-            if (view == null) {
-                view = inflater.inflate(R.layout.contact_list_item, parent, false);
-                holder = new ViewHolder();
-                holder.header = view.findViewById(R.id.header);
-                holder.body = view.findViewById(R.id.body);
-                holder.initial = (TextView) view.findViewById(R.id.initial);
-                holder.image = (ImageView) view.findViewById(R.id.toolbar_find_icon);
-                holder.name = (TextView) view.findViewById(R.id.name);
-                view.setTag(holder);
+            ContactItemView itemView;
+            if (convertView == null) {
+                itemView = new ContactItemView(ContactFragment.this.getContext());
+                itemView.setTag(itemView);
             } else {
-                holder = (ViewHolder) view.getTag();
+                itemView = (ContactItemView) convertView.getTag();
             }
-
-            if (position == 0) {
-                holder.body.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(ContactFragment.this.getActivity(), NewFriendActivity.class);
-                        ContactFragment.this.startActivity(intent);
-                    }
-                });
-                holder.image.setImageResource(R.mipmap.new_friend);
-                holder.name.setText("新的朋友");
-            }
-            return view;
-        }
-
-        private class ViewHolder {
-            View header;
-            View body;
-            TextView initial;
-            ImageView image;
-            TextView name;
+            itemView.setInfoMode(ContactItemView.SIMPLE);
+            itemView.setNickname("新的朋友");
+            itemView.setPortrait(R.mipmap.new_friend);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ContactFragment.this.getActivity(), NewFriendActivity.class);
+                    ContactFragment.this.startActivity(intent);
+                }
+            });
+            return itemView;
         }
     }
 }

@@ -93,6 +93,7 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
                 }
 
                 waitingDialog = new WaitingDialog(SignUpActivity.this);
+                waitingDialog.setText("正在登录...");
                 waitingDialog.show();
                 state = STATE_CHECK_USERNAME;
                 BmobUtil.checkUserFromServer(username.getText(), handler);

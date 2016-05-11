@@ -69,6 +69,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
             @Override
             public void onClick(View v) {
                 waitingDialog = new WaitingDialog(LoginActivity.this);
+                waitingDialog.setText("正在登录...");
                 waitingDialog.show();
                 state = STATE_LOGIN;
                 BmobUtil.loginToServer(getUser(), handler);
@@ -97,6 +98,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
             username.setText(name);
             password.setText("********");
             waitingDialog = new WaitingDialog(LoginActivity.this);
+            waitingDialog.setText("正在登录...");
             waitingDialog.show();
             state = STATE_CONNECT_IM_SERVER;
             RongUtil.connectIMServer(token, handler, 1000);

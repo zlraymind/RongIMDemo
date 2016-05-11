@@ -100,7 +100,7 @@
         <View
             android:id="@id/underline"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="13dp"
@@ -109,8 +109,10 @@
     </RelativeLayout>
 
     <ListView
-        android:id="@+id/find_friend_list"
+        android:id="@+id/friend_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff"/>
+        android:background="#ffffff"
+        android:divider="@null"
+        android:listSelector="@android:color/transparent"/>
 </LinearLayout>
