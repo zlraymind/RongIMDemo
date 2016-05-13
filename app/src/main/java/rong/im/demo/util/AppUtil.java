@@ -3,7 +3,6 @@ package rong.im.demo.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -12,18 +11,26 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import rong.im.demo.R;
+import rong.im.demo.model.User;
 
 public class AppUtil {
 
     public static final String SHARED_INFO = "RongDemo";
-    public static final String LOGIN_USER_ID = "Login_UserId";
-    public static final String LOGIN_TOKEN = "Login_Token";
+    public static final String LOGIN_USERNAME = "Login_Username";
+    public static final String LOGIN_PASSWORD_MD5 = "Login_Password_MD5";
 
     private static SharedPreferences gsp;
     private static Context gContext;
     private static DisplayImageOptions imageOptions;
-    private static String currentUsername;
+    private static User currentUser;
 
     public static void init(Context context) {
         gContext = context;
@@ -39,37 +46,51 @@ public class AppUtil {
         return (int) (dpValue * scale + 0.5f);
     }
 
-    public static void setCurrentUsername(String username) {
-        currentUsername = username;
+    public static String md5(String string) {
+        byte[] hash;
+        try {
+            hash = MessageDigest.getInstance("MD5").digest(string.getBytes("UTF-8"));
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Huh, MD5 should be supported?", e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Huh, UTF-8 should be supported?", e);
+        }
+
+        StringBuilder hex = new StringBuilder(hash.length * 2);
+        for (byte b : hash) {
+            if ((b & 0xFF) < 0x10) hex.append("0");
+            hex.append(Integer.toHexString(b & 0xFF));
+        }
+        return hex.toString();
     }
 
-    public static String getCurrentUsername() {
-        return currentUsername;
+    public static User getCurrentUser() {
+        return RemoteDBUtil.getCurrentUser();
     }
 
-    public static void saveUserInfo(Context context, String username, String token) {
-        SharedPreferences sp = getSharedPreferences(context);
+    public static void saveLoginInfo(String username, String password_md5) {
+        SharedPreferences sp = getSharedPreferences();
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(LOGIN_USER_ID, username);
-        editor.putString(LOGIN_TOKEN, token);
+        editor.putString(LOGIN_USERNAME, username);
+        editor.putString(LOGIN_PASSWORD_MD5, password_md5);
         editor.commit();
     }
 
     public static String getCachedUsername() {
-        SharedPreferences sp = getSharedPreferences(gContext);
-        return sp.getString(LOGIN_USER_ID, "");
+        SharedPreferences sp = getSharedPreferences();
+        return sp.getString(LOGIN_USERNAME, "");
     }
 
-    public static String getCachedToken() {
-        SharedPreferences sp = getSharedPreferences(gContext);
-        return sp.getString(LOGIN_TOKEN, "");
+    public static String getCachedPasswordMD5() {
+        SharedPreferences sp = getSharedPreferences();
+        return sp.getString(LOGIN_PASSWORD_MD5, "");
     }
 
     public static void clearUserInfoCached() {
-        SharedPreferences sp = getSharedPreferences(gContext);
+        SharedPreferences sp = getSharedPreferences();
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(LOGIN_USER_ID, "");
-        editor.putString(LOGIN_TOKEN, "");
+        editor.putString(LOGIN_USERNAME, "");
+        editor.putString(LOGIN_PASSWORD_MD5, "");
         editor.commit();
     }
 
@@ -77,9 +98,9 @@ public class AppUtil {
         ImageLoader.getInstance().displayImage(uri, imageView, imageOptions);
     }
 
-    private static SharedPreferences getSharedPreferences(Context context) {
+    private static SharedPreferences getSharedPreferences() {
         if (gsp == null) {
-            gsp = context.getSharedPreferences(SHARED_INFO, Context.MODE_PRIVATE);
+            gsp = gContext.getSharedPreferences(SHARED_INFO, Context.MODE_PRIVATE);
         }
         return gsp;
     }

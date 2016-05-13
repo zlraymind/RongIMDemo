@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import rong.im.demo.App;
 import rong.im.demo.R;
 import rong.im.demo.model.User;
 import rong.im.demo.util.AppUtil;
@@ -29,17 +30,16 @@ import rong.im.demo.widget.WarringDialog;
 public class SignUpActivity extends AppCompatActivity implements TextWatcher, Handler.Callback {
 
     private static final String TAG = "SignUpActivity";
-    private static final int STATE_CHECK_USERNAME = 1;
+    private static final int STATE_ADD_USERNAME = 1;
     private static final int STATE_UPLOAD_PORTRAIT = 2;
-    private static final int STATE_SIGN_UP = 3;
-    private static final int STATE_LOGIN = 4;
-    private static final int STATE_REQUEST_TOKEN = 5;
-    private static final int STATE_CONNECT_IM_SERVER = 6;
+    private static final int STATE_LOGIN = 3;
+    private static final int STATE_REQUEST_TOKEN = 4;
+    private static final int STATE_CONNECT_IM_SERVER = 5;
+    private static final int STATE_LOGIN_SUCCESS = 6;
 
     private LoginEditBox nickname;
     private LoginEditBox username;
     private LoginEditBox password;
-    private ImageView back;
     private ImageView portrait;
     private Button signUp;
     private WaitingDialog waitingDialog;
@@ -55,10 +55,10 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
     }
 
     private void initView() {
-        nickname = new LoginEditBox(findViewById(R.id.layout_nickname), "昵称", "例如:张无忌");
-        username = new LoginEditBox(findViewById(R.id.layout_username), "用户名", "您的用户名");
+        username = new LoginEditBox(findViewById(R.id.layout_username), "登录名", "例如:张无忌");
+        nickname = new LoginEditBox(findViewById(R.id.layout_nickname), "昵称", "您的用户名");
         password = new LoginEditBox(findViewById(R.id.layout_password), "密码", "填写密码");
-        back = (ImageView) findViewById(R.id.back);
+        ImageView back = (ImageView) findViewById(R.id.back);
         portrait = (ImageView) findViewById(R.id.portrait);
         signUp = (Button) findViewById(R.id.sign_up);
 
@@ -95,8 +95,8 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
                 waitingDialog = new WaitingDialog(SignUpActivity.this);
                 waitingDialog.setText("正在登录...");
                 waitingDialog.show();
-                state = STATE_CHECK_USERNAME;
-                RemoteDBUtil.checkUserFromServer(username.getText(), handler);
+                state = STATE_ADD_USERNAME;
+                RemoteDBUtil.addUserToServer(getUser(), AppUtil.md5(password.getText()), handler);
             }
         });
     }
@@ -112,13 +112,8 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
     private User getUser() {
         User user = new User();
         user.username = username.getText();
-        user.password = password.getText();
         user.nickname = nickname.getText();
-        if (portrait.getTag() == null) {
-            user.portrait = Const.DEFAULT_PORTRAIT;
-        } else {
-            user.portrait = (String) portrait.getTag();
-        }
+        user.portrait = Const.DEFAULT_PORTRAIT;
         return user;
     }
 
@@ -131,36 +126,30 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
             return true;
         }
 
-        switch (state++) {
-            case STATE_CHECK_USERNAME:
-                if (portrait.getTag() == null) {
-                    state = STATE_SIGN_UP;
-                    RemoteDBUtil.addUserToServer(getUser(), handler);
-                } else {
+        switch (++state) {
+            case STATE_UPLOAD_PORTRAIT:
+                if (portrait.getTag() != null) {
                     RemoteDBUtil.uploadPortraitToServer((String) portrait.getTag(), handler);
+                } else {
+                    handler.sendEmptyMessage(Const.REQUEST_SUCCESS);
                 }
                 break;
-            case STATE_UPLOAD_PORTRAIT:
-                RemoteDBUtil.addUserToServer(getUser(), handler);
-                break;
-            case STATE_SIGN_UP:
-                RemoteDBUtil.loginToServer(getUser(), handler);
-                break;
             case STATE_LOGIN:
-                RemoteDBUtil.requestToken(getUser(), handler);
+                RemoteDBUtil.loginToServer(username.getText(), AppUtil.md5(password.getText()), handler);
                 break;
             case STATE_REQUEST_TOKEN:
-                String token = (String) msg.obj;
-                AppUtil.saveUserInfo(this, username.getText(), token);
-                RongUtil.connectIMServer(token, handler);
+                AppUtil.saveLoginInfo(username.getText(), AppUtil.md5(password.getText()));
+                RemoteDBUtil.requestToken(RemoteDBUtil.getCurrentUser(), handler);
                 break;
             case STATE_CONNECT_IM_SERVER:
-                AppUtil.setCurrentUsername(username.getText());
+                String token = (String) msg.obj;
+                RongUtil.connectIMServer(token, handler);
+                break;
+            case STATE_LOGIN_SUCCESS:
                 waitingDialog.dismiss();
                 Intent intent = new Intent();
                 intent.setClass(SignUpActivity.this, MainActivity.class);
                 startActivity(intent);
-                finish();
                 break;
             default:
         }

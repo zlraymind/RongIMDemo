@@ -51,7 +51,7 @@ public class InviteActivity extends AppCompatActivity implements Handler.Callbac
             @Override
             public void onClick(View v) {
                 String username = getIntent().getStringExtra("username");
-                RemoteDBUtil.sendInvitation(username, AppUtil.getCurrentUsername(), handler);
+                RemoteDBUtil.sendInvitation(username, AppUtil.getCurrentUser().username, handler);
                 waitingDialog = new WaitingDialog(InviteActivity.this);
                 waitingDialog.setText("正在发送邀请...");
                 waitingDialog.show();

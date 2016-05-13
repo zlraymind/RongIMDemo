@@ -17,7 +17,6 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.CloudCodeListener;
-import cn.bmob.v3.listener.DeleteListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
@@ -27,19 +26,23 @@ public class RemoteDBUtil {
 
     private static final String TAG = "RemoteDBUtil";
 
-    public static void checkUserFromServer(String username, final Handler handler) {
-        BmobQuery<LoginUser> query = new BmobQuery<>();
-        query.addWhereEqualTo("username", username);
-        query.findObjects(AppUtil.getContext(), new FindListener<LoginUser>() {
+    public static void addUserToServer(User user, String password_md5, final Handler handler) {
+        LoginUser loginUser = new LoginUser();
+        loginUser.setUsername(user.username.toLowerCase());
+        loginUser.setNickname(user.nickname);
+        loginUser.setPortrait(user.portrait);
+        loginUser.setPassword(password_md5);
+
+        loginUser.signUp(AppUtil.getContext(), new SaveListener() {
             @Override
-            public void onSuccess(List<LoginUser> object) {
-                Log.d(TAG, "checkUserFromServer onSuccess");
+            public void onSuccess() {
+                Log.d(TAG, "addUserToServer onSuccess");
                 handler.sendEmptyMessage(Const.REQUEST_SUCCESS);
             }
 
             @Override
-            public void onError(int code, String msg) {
-                Log.e(TAG, "checkUserFromServer onFailure code = " + code + "; msg = " + msg);
+            public void onFailure(int code, String msg) {
+                Log.e(TAG, "addUserToServer onFailure code = " + code + "; msg = " + msg);
                 Message message = Message.obtain();
                 message.what = Const.REQUEST_FAILED;
                 message.obj = msg;
@@ -71,35 +74,11 @@ public class RemoteDBUtil {
         });
     }
 
-    public static void addUserToServer(User user, final Handler handler) {
+    public static void loginToServer(String username, String password_md5, final Handler handler) {
+        Log.d(TAG, "loginToServer password = " + password_md5);
         LoginUser loginUser = new LoginUser();
-        loginUser.setUsername(user.username);
-        loginUser.setPassword(user.password);
-        loginUser.setNickname(user.nickname);
-        loginUser.setPortrait(user.portrait);
-
-        loginUser.signUp(AppUtil.getContext(), new SaveListener() {
-            @Override
-            public void onSuccess() {
-                Log.d(TAG, "addUserToServer onSuccess");
-                handler.sendEmptyMessage(Const.REQUEST_SUCCESS);
-            }
-
-            @Override
-            public void onFailure(int code, String msg) {
-                Log.e(TAG, "addUserToServer onFailure code = " + code + "; msg = " + msg);
-                Message message = Message.obtain();
-                message.what = Const.REQUEST_FAILED;
-                message.obj = msg;
-                handler.sendMessage(message);
-            }
-        });
-    }
-
-    public static void loginToServer(User user, final Handler handler) {
-        LoginUser loginUser = new LoginUser();
-        loginUser.setUsername(user.username);
-        loginUser.setPassword(user.password);
+        loginUser.setUsername(username.toLowerCase());
+        loginUser.setPassword(password_md5);
 
         loginUser.login(AppUtil.getContext(), new SaveListener() {
             @Override
@@ -119,7 +98,13 @@ public class RemoteDBUtil {
         });
     }
 
+    public static User getCurrentUser() {
+        LoginUser curUser = BmobUser.getCurrentUser(AppUtil.getContext(), LoginUser.class);
+        return new User(curUser.getUsername(), curUser.getNickname(), curUser.getPortrait());
+    }
+
     public static void requestToken(User user, final Handler handler) {
+        Log.d(TAG, "requestToken User = (" + user.username + "/" + user.nickname + "/" + user.portrait + ")");
         JSONObject params = new JSONObject();
         try {
             params.put("userId", user.username);
@@ -138,6 +123,7 @@ public class RemoteDBUtil {
         cloudCode.callEndpoint(AppUtil.getContext(), "requestToken", params, new CloudCodeListener() {
             @Override
             public void onSuccess(Object result) {
+                Log.d(TAG, "requestToken result = " + result.toString());
                 Message msg = Message.obtain();
                 try {
                     JSONObject jsonObj = new JSONObject(result.toString());
@@ -211,16 +197,16 @@ public class RemoteDBUtil {
                     Log.d(TAG, "item.getTableName() = " + item.getTableName());
                     item.setTableName(item.getClass().getSimpleName());
                 }
-                new Invitation().deleteBatch(AppUtil.getContext(), list, new DeleteListener() {
-                    @Override
-                    public void onSuccess() {
-                        Log.d(TAG, "111");
-                    }
-                    @Override
-                    public void onFailure(int code, String msg) {
-                        Log.d(TAG, "222 code = " + code +"; msg = " + msg);
-                    }
-                });
+//                new Invitation().deleteBatch(AppUtil.getContext(), list, new DeleteListener() {
+//                    @Override
+//                    public void onSuccess() {
+//                        Log.d(TAG, "111");
+//                    }
+//                    @Override
+//                    public void onFailure(int code, String msg) {
+//                        Log.d(TAG, "222 code = " + code +"; msg = " + msg);
+//                    }
+//                });
 
                 Invitation table = new Invitation(username, inviter);
                 table.save(AppUtil.getContext(), new SaveListener() {

@@ -111,7 +111,7 @@ public class FindFriendActivity extends AppCompatActivity implements Handler.Cal
         if (msg.what == Const.REQUEST_SUCCESS) {
             ArrayList<User> userList = (ArrayList<User>) msg.obj;
             for (int i = 0; i < userList.size(); i++) {
-                if (userList.get(i).username.equals(AppUtil.getCurrentUsername())) {
+                if (userList.get(i).username.equals(AppUtil.getCurrentUser().username)) {
                     userList.remove(i);
                     break;
                 }

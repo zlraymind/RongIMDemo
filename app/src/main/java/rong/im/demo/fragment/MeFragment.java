@@ -35,6 +35,8 @@ public class MeFragment extends Fragment {
 
                 Intent intent = new Intent();
                 intent.setClass(activity, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("logout", true);
                 startActivity(intent);
                 activity.finish();
             }

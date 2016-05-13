@@ -39,7 +39,7 @@
         android:src="@mipmap/portrait_camera"/>
 
     <include
-        android:id="@+id/layout_nickname"
+        android:id="@+id/layout_username"
         layout="@layout/login_editbox"
         android:layout_width="0dp"
         android:layout_height="48dp"
@@ -50,30 +50,30 @@
         android:layout_weight="1"/>
 
     <include
-        android:id="@+id/layout_username"
+        android:id="@+id/layout_nickname"
         layout="@layout/login_editbox"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_alignLeft="@+id/layout_nickname"
+        android:layout_alignLeft="@+id/layout_username"
         android:layout_alignRight="@+id/portrait"
-        android:layout_below="@+id/layout_nickname"/>
+        android:layout_below="@+id/layout_username"/>
 
     <include
         android:id="@+id/layout_password"
         layout="@layout/login_editbox"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_alignLeft="@id/layout_username"
-        android:layout_alignRight="@id/layout_username"
-        android:layout_below="@id/layout_username"/>
+        android:layout_alignLeft="@id/layout_nickname"
+        android:layout_alignRight="@id/layout_nickname"
+        android:layout_below="@id/layout_nickname"/>
 
     <Button
         android:id="@+id/sign_up"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_alignLeft="@id/layout_username"
-        android:layout_alignRight="@id/layout_username"
+        android:layout_alignLeft="@id/layout_nickname"
+        android:layout_alignRight="@id/layout_nickname"
         android:layout_below="@id/layout_password"
         android:layout_marginTop="24dp"
         android:background="@drawable/login_button"

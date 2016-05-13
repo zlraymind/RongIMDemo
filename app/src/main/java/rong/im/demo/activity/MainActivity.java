@@ -1,6 +1,7 @@
 package rong.im.demo.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -16,12 +17,14 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 
+import io.rong.imkit.RongIM;
 import io.rong.imkit.fragment.ConversationListFragment;
 import io.rong.imlib.model.Conversation;
 import rong.im.demo.R;
 import rong.im.demo.fragment.ContactFragment;
 import rong.im.demo.fragment.DiscoveryFragment;
 import rong.im.demo.fragment.MeFragment;
+import rong.im.demo.util.RongUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-        initConversationList();
     }
 
     private void initView() {
@@ -79,7 +81,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void initConversationList() {
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.setClass(MainActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        RongIM.getInstance().disconnect();
+        finish();
+        return;
     }
 
     private class TitleIcon {
