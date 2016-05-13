@@ -23,6 +23,7 @@ public class AppUtil {
     private static SharedPreferences gsp;
     private static Context gContext;
     private static DisplayImageOptions imageOptions;
+    private static String currentUsername;
 
     public static void init(Context context) {
         gContext = context;
@@ -36,6 +37,14 @@ public class AppUtil {
     public static int dip2px(float dpValue) {
         final float scale = gContext.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
+    }
+
+    public static void setCurrentUsername(String username) {
+        currentUsername = username;
+    }
+
+    public static String getCurrentUsername() {
+        return currentUsername;
     }
 
     public static void saveUserInfo(Context context, String username, String token) {
@@ -64,7 +73,7 @@ public class AppUtil {
         editor.commit();
     }
 
-    public static void loadUriImage(String uri, ImageView imageView) {
+    public static void loadRemoteImage(String uri, ImageView imageView) {
         ImageLoader.getInstance().displayImage(uri, imageView, imageOptions);
     }
 

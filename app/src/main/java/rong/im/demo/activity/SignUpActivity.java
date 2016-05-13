@@ -19,7 +19,7 @@ import android.widget.Toast;
 import rong.im.demo.R;
 import rong.im.demo.model.User;
 import rong.im.demo.util.AppUtil;
-import rong.im.demo.util.BmobUtil;
+import rong.im.demo.util.RemoteDBUtil;
 import rong.im.demo.util.Const;
 import rong.im.demo.util.RongUtil;
 import rong.im.demo.widget.LoginEditBox;
@@ -96,7 +96,7 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
                 waitingDialog.setText("正在登录...");
                 waitingDialog.show();
                 state = STATE_CHECK_USERNAME;
-                BmobUtil.checkUserFromServer(username.getText(), handler);
+                RemoteDBUtil.checkUserFromServer(username.getText(), handler);
             }
         });
     }
@@ -135,19 +135,19 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
             case STATE_CHECK_USERNAME:
                 if (portrait.getTag() == null) {
                     state = STATE_SIGN_UP;
-                    BmobUtil.addUserToServer(getUser(), handler);
+                    RemoteDBUtil.addUserToServer(getUser(), handler);
                 } else {
-                    BmobUtil.uploadPortraitToServer((String) portrait.getTag(), handler);
+                    RemoteDBUtil.uploadPortraitToServer((String) portrait.getTag(), handler);
                 }
                 break;
             case STATE_UPLOAD_PORTRAIT:
-                BmobUtil.addUserToServer(getUser(), handler);
+                RemoteDBUtil.addUserToServer(getUser(), handler);
                 break;
             case STATE_SIGN_UP:
-                BmobUtil.loginToServer(getUser(), handler);
+                RemoteDBUtil.loginToServer(getUser(), handler);
                 break;
             case STATE_LOGIN:
-                BmobUtil.requestToken(getUser(), handler);
+                RemoteDBUtil.requestToken(getUser(), handler);
                 break;
             case STATE_REQUEST_TOKEN:
                 String token = (String) msg.obj;
@@ -155,6 +155,7 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Ha
                 RongUtil.connectIMServer(token, handler);
                 break;
             case STATE_CONNECT_IM_SERVER:
+                AppUtil.setCurrentUsername(username.getText());
                 waitingDialog.dismiss();
                 Intent intent = new Intent();
                 intent.setClass(SignUpActivity.this, MainActivity.class);

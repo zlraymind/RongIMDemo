@@ -76,38 +76,17 @@ public class ContactItemView extends LinearLayout {
     }
 
     public void setUserInfo(User user) {
-        AppUtil.loadUriImage(user.portrait, portrait);
+        AppUtil.loadRemoteImage(user.portrait, portrait);
         if (infoMode == SIMPLE) {
             if (!searchText.isEmpty()) {
-                SpannableStringBuilder builder = new SpannableStringBuilder(user.nickname);
-                int start = user.nickname.toLowerCase().indexOf(searchText.toLowerCase());
-                int end = 0;
-                if (start >= 0) {
-                    end = start + searchText.length();
-                    builder.setSpan(new ForegroundColorSpan(Color.GREEN), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-                nickname_simple.setText(builder);
+                nickname_simple.setText(createStringBuilder(user.nickname));
             } else {
                 nickname_simple.setText(user.nickname);
             }
         } else {
             if (!searchText.isEmpty()) {
-                SpannableStringBuilder builder = new SpannableStringBuilder(user.username);
-                int start = user.username.toLowerCase().indexOf(searchText.toLowerCase());
-                int end;
-                if (start >= 0) {
-                    end = start + searchText.length();
-                    builder.setSpan(new ForegroundColorSpan(Color.GREEN), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-                username_detail.setText(builder);
-
-                builder = new SpannableStringBuilder(user.nickname);
-                start = user.nickname.toLowerCase().indexOf(searchText.toLowerCase());
-                if (start >= 0) {
-                    end = start + searchText.length();
-                    builder.setSpan(new ForegroundColorSpan(Color.GREEN), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-                nickname_detail.setText(builder);
+                username_detail.setText(createStringBuilder(user.username));
+                nickname_detail.setText(createStringBuilder(user.nickname));
             } else {
                 username_detail.setText(user.username);
                 nickname_detail.setText(user.nickname);
@@ -129,5 +108,16 @@ public class ContactItemView extends LinearLayout {
 
     public void setSearchText(String text) {
         searchText = text;
+    }
+
+    private SpannableStringBuilder createStringBuilder(String text) {
+        SpannableStringBuilder builder = new SpannableStringBuilder(text);
+        int start = text.toLowerCase().indexOf(searchText.toLowerCase());
+        int end = 0;
+        if (start >= 0) {
+            end = start + searchText.length();
+            builder.setSpan(new ForegroundColorSpan(Color.GREEN), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        return builder;
     }
 }

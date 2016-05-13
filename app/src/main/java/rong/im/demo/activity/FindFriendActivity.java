@@ -25,8 +25,9 @@ import java.util.ArrayList;
 
 import rong.im.demo.R;
 import rong.im.demo.model.User;
-import rong.im.demo.util.BmobUtil;
+import rong.im.demo.util.AppUtil;
 import rong.im.demo.util.Const;
+import rong.im.demo.util.RemoteDBUtil;
 import rong.im.demo.widget.ContactItemView;
 import rong.im.demo.widget.WaitingDialog;
 import rong.im.demo.widget.WarringDialog;
@@ -95,8 +96,8 @@ public class FindFriendActivity extends AppCompatActivity implements Handler.Cal
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "v = " + searchEdit.getText().toString());
-                BmobUtil.queryLoginUser(searchEdit.getText().toString(), handler);
+                Log.d(TAG, "search text = " + searchEdit.getText().toString());
+                RemoteDBUtil.queryLoginUser(searchEdit.getText().toString(), handler);
                 waitingDialog = new WaitingDialog(FindFriendActivity.this);
                 waitingDialog.setText("正在查找联系人...");
                 waitingDialog.show();
@@ -108,7 +109,14 @@ public class FindFriendActivity extends AppCompatActivity implements Handler.Cal
     public boolean handleMessage(Message msg) {
         waitingDialog.dismiss();
         if (msg.what == Const.REQUEST_SUCCESS) {
-            showSearchResult((ArrayList<User>) msg.obj);
+            ArrayList<User> userList = (ArrayList<User>) msg.obj;
+            for (int i = 0; i < userList.size(); i++) {
+                if (userList.get(i).username.equals(AppUtil.getCurrentUsername())) {
+                    userList.remove(i);
+                    break;
+                }
+            }
+            showSearchResult(userList);
         } else if (msg.what == Const.REQUEST_FAILED) {
             Toast.makeText(FindFriendActivity.this, (String) msg.obj, Toast.LENGTH_SHORT).show();
         }
@@ -178,8 +186,8 @@ public class FindFriendActivity extends AppCompatActivity implements Handler.Cal
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ContactItemView itemView;
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            final ContactItemView itemView;
             if (convertView == null) {
                 itemView = new ContactItemView(FindFriendActivity.this);
                 itemView.setTag(itemView);
@@ -187,6 +195,7 @@ public class FindFriendActivity extends AppCompatActivity implements Handler.Cal
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(FindFriendActivity.this, InviteActivity.class);
+                        intent.putExtra("username", userList.get(position).username);
                         FindFriendActivity.this.startActivity(intent);
                     }
                 });

@@ -17,7 +17,7 @@ import android.widget.Toast;
 import rong.im.demo.R;
 import rong.im.demo.model.User;
 import rong.im.demo.util.AppUtil;
-import rong.im.demo.util.BmobUtil;
+import rong.im.demo.util.RemoteDBUtil;
 import rong.im.demo.util.Const;
 import rong.im.demo.util.RongUtil;
 import rong.im.demo.widget.LoginEditBox;
@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
                 waitingDialog.setText("正在登录...");
                 waitingDialog.show();
                 state = STATE_LOGIN;
-                BmobUtil.loginToServer(getUser(), handler);
+                RemoteDBUtil.loginToServer(getUser(), handler);
             }
         });
         signUp.setOnClickListener(new View.OnClickListener() {
@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
 
         switch (state++) {
             case STATE_LOGIN:
-                BmobUtil.requestToken(getUser(), handler);
+                RemoteDBUtil.requestToken(getUser(), handler);
                 break;
             case STATE_REQUEST_TOKEN:
                 String token = (String) msg.obj;
@@ -124,6 +124,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Han
                 RongUtil.connectIMServer(token, handler);
                 break;
             case STATE_CONNECT_IM_SERVER:
+                AppUtil.setCurrentUsername(username.getText());
                 waitingDialog.dismiss();
                 Intent intent = new Intent();
                 intent.setClass(LoginActivity.this, MainActivity.class);
